@@ -11,13 +11,13 @@ authors = [
 
 readme = 'README.md'
 
-repository = "https://office.visualstudio.com/Outlook%20Mobile/_git/asconnect"
-homepage = "https://office.visualstudio.com/Outlook%20Mobile/_git/asconnect"
+repository = "https://github.com/microsoft/asconnect"
+homepage = "https://github.com/microsoft/asconnect"
 
 keywords = ['apple', 'app store', 'itunes', 'connect']
 
 classifiers = [
-    'Development Status :: 3 - Alpha',
+    'Development Status :: 5 - Production/Stable',
     'Environment :: Console',
     'Environment :: MacOS X',
     'Intended Audience :: Developers',
