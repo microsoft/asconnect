@@ -18,8 +18,6 @@ import asconnect  # pylint: disable=wrong-import-order
 
 APP_ID = ""
 IPA_PATH = ""
-USERNAME = ""
-PASSWORD = ""
 
 
 def get_test_data() -> Tuple[str, str, str]:
@@ -107,15 +105,9 @@ def test_upload() -> None:
     key_id, key_contents, issuer_id = get_test_data()
 
     client = asconnect.Client(key_id=key_id, key_contents=key_contents, issuer_id=issuer_id,)
-    app = client.app.get_from_bundle_id(APP_ID)
-    assert app is not None
 
-    asconnect.upload_build(
-        ipa_path=IPA_PATH,
-        bundle_id=APP_ID,
-        app_id=app.identifier,
-        username=USERNAME,
-        password=PASSWORD,
+    client.build.upload(
+        ipa_path=IPA_PATH, platform=asconnect.Platform.ios,
     )
 
 

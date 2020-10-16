@@ -37,15 +37,12 @@ app = client.app.get_from_bundle_id("com.example.my_bundle_id")
 
 ### Uploading a Build
 
-Uploading a build isn't technically part of the App Store Connect APIs, but a wrapper around itmstransporter is included to make things as easy as possible. Let's upload a build for your app:
+Uploading a build isn't technically part of the App Store Connect APIs, but a wrapper around altool is included to make things as easy as possible. Let's upload a build for your app:
 
 ```python
-asconnect.itms.upload_build(
+client.build.upload(
   ipa_path="/path/to/the/app.ipa",
-  bundle_id="com.example.my_bundle_id",
-  app_id=app.identifier,  # Taken from the call above
-  username=username,  # ITC username
-  password=password,  # ITC password
+  platform=asconnect.Platform.ios,
 )
 ```
 

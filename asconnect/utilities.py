@@ -1,6 +1,7 @@
 """Utilities for the library."""
 
 import hashlib
+import os
 from typing import Dict, Iterator, Optional, TypeVar
 import urllib.parse
 
@@ -51,3 +52,24 @@ def md5_file(file_path: str) -> str:
         for chunk in iter(lambda: file_handle.read(4096), b""):
             hasher.update(chunk)
     return hasher.hexdigest()
+
+
+def write_key(key_id: str, key_contents: str) -> str:
+    """Write a key to the private key folder for altool.
+
+    :param key_id: The ID of the key
+    :param key_contents: The text key contents
+
+    :returns: The path the key was written out to
+    """
+
+    folder_path = os.path.expanduser("~/.appstoreconnect/private_keys")
+    os.makedirs(folder_path, exist_ok=True)
+
+    key_file_name = f"AuthKey_{key_id}.p8"
+    key_file_path = os.path.join(folder_path, key_file_name)
+
+    with open(key_file_path, "w") as key_file:
+        key_file.write(key_contents)
+
+    return key_file_path

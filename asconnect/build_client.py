@@ -4,14 +4,16 @@
 # Licensed under the MIT license.
 
 import logging
+import os
 import time
 from typing import Iterator, List, Optional
 
 from asconnect.httpclient import HttpClient
 
+from asconnect.altool import upload, Platform
 from asconnect.models import App, Build, BuildBetaDetail
 from asconnect.sorting import BuildsSort
-from asconnect.utilities import update_query_parameters, next_or_none
+from asconnect.utilities import update_query_parameters, next_or_none, write_key
 
 
 class BuildClient:
@@ -148,3 +150,24 @@ class BuildClient:
         assert build.relationships is not None
         url = build.relationships["buildBetaDetail"].links.related
         return next_or_none(self.http_client.get(url=url, data_type=BuildBetaDetail))
+
+    def upload(self, ipa_path: str, platform: Platform) -> None:
+        """Upload a build to App Store Connect.
+
+        :param ipa_path: The path to the IPA
+        :param platform: The platform the app is for
+        """
+
+        key_path = write_key(self.http_client.key_id, self.http_client.key_contents)
+
+        try:
+            upload(
+                ipa_path=ipa_path,
+                platform=platform,
+                key_id=self.http_client.key_id,
+                issuer_id=self.http_client.issuer_id,
+                log=self.log,
+            )
+
+        finally:
+            os.remove(key_path)
