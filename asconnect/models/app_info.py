@@ -18,9 +18,9 @@ class AppInfoLocalization(Resource):
     class Attributes:
         """Represents app info localization attributes."""
 
-        locale: str
-        name: str
-        privacy_policy_text: str
+        locale: Optional[str]
+        name: Optional[str]
+        privacy_policy_text: Optional[str]
         privacy_policy_url: Optional[str]
         subtitle: Optional[str]
 
