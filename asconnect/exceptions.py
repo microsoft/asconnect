@@ -34,11 +34,11 @@ class AppStoreConnectError(Exception):
 
         data = data[0]
 
-        self.identifier = data["id"]
-        self.status = int(data["status"])
-        self.code = data["code"]
-        self.title = data["title"]
-        self.detail = data["detail"]
+        self.identifier = data.get("id", "<unknown>")
+        self.status = int(data.get("status", -1))
+        self.code = data.get("code", "<unknown>")
+        self.title = data.get("title", "<unknown>")
+        self.detail = data.get("detail", "<unknown>")
         self.source = data.get("source")
 
         super().__init__(f"[{self.status}] {self.title} ({self.code}): {self.detail}")
