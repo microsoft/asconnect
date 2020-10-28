@@ -3,6 +3,7 @@
 import enum
 import logging
 import subprocess
+import time
 from typing import Optional
 
 
@@ -21,6 +22,8 @@ def upload(
     key_id: str,
     issuer_id: str,
     log: Optional[logging.Logger] = None,
+    attempt: int = 1,
+    max_attempts: int = 3,
 ) -> None:
     """Upload a build to app store connect.
 
@@ -29,6 +32,8 @@ def upload(
     :param key_id: The ID for the key used for auth
     :param issuer_id: The ID of the issuer of the auth key
     :param log: Any base logger to be used (one will be created if not supplied)
+    :param attempt: The attempt this is
+    :param max_attempts: The number of attempts allowed
 
     :raises CalledProcessError: If something goes wrong during upload
     """
@@ -66,15 +71,34 @@ def upload(
 
     assert upload_process.stdout is not None
     command_output = ""
+    should_restart = False
     for line in iter(upload_process.stdout.readline, ""):
         log.info(line.rstrip())
+        if "Error: Server returned an invalid MIME type: text/plain" in line:
+            should_restart = True
         command_output += line
     upload_process.stdout.close()
     upload_process.wait()
 
-    if upload_process.returncode != 0:
-        raise subprocess.CalledProcessError(
-            upload_process.returncode,
-            command,
-            "Failed to upload the build. Please see the logs for more information.",
+    if upload_process.returncode == 0:
+        return
+
+    if should_restart and attempt < max_attempts:
+        log.info("Upload failed due to intermittent issue. Will sleep for 1 minute and try again.")
+        time.sleep(60)
+        upload(
+            ipa_path=ipa_path,
+            platform=platform,
+            key_id=key_id,
+            issuer_id=issuer_id,
+            log=log,
+            attempt=attempt + 1,
+            max_attempts=max_attempts,
         )
+        return
+
+    raise subprocess.CalledProcessError(
+        upload_process.returncode,
+        command,
+        "Failed to upload the build. Please see the logs for more information.",
+    )
