@@ -123,9 +123,7 @@ class HttpClient:
             if response_data["data"] is None:
                 yield from []
             else:
-                deserialized_data = deserialize.deserialize(
-                    data_type, response_data["data"], throw_on_unhandled=True
-                )
+                deserialized_data = deserialize.deserialize(data_type, response_data["data"])
 
                 if isinstance(deserialized_data, list):
                     yield from deserialized_data
@@ -188,7 +186,7 @@ class HttpClient:
         if data_type is None:
             return None
 
-        return deserialize.deserialize(data_type, response_data["data"], throw_on_unhandled=True)
+        return deserialize.deserialize(data_type, response_data["data"])
 
     def post(
         self,
@@ -233,9 +231,7 @@ class HttpClient:
 
             response_data = self.extract_data(raw_response)
 
-            return deserialize.deserialize(
-                data_type, response_data["data"], throw_on_unhandled=True
-            )
+            return deserialize.deserialize(data_type, response_data["data"])
 
         if raw_response.status_code >= 200 and raw_response.status_code < 300:
             return None
