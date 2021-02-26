@@ -224,6 +224,7 @@ class VersionClient:
         :returns: The review details
         """
 
+        self.log.debug("Getting existing IDFA...")
         existing_details = self.get_idfa(version_id=version_id)
 
         attributes = {
@@ -234,6 +235,7 @@ class VersionClient:
         }
 
         if existing_details:
+            self.log.debug("Patching existing IDFA")
             return self.http_client.patch(
                 endpoint=f"idfaDeclarations/{existing_details.identifier}",
                 data={
@@ -246,6 +248,7 @@ class VersionClient:
                 data_type=IdfaDeclaration,
             )
 
+        self.log.debug("Setting new IDFA")
         return self.http_client.post(
             endpoint="idfaDeclarations",
             data={
