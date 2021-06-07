@@ -1,0 +1,7 @@
+PyJWT==1.7.1
+deserialize==1.8.0
+pytest==5.4.1
+requests==2.23.0
+black==20.8b1
+typed-ast==1.4.1
+typing-extensions==3.7.4.3
