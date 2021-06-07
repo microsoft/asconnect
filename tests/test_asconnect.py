@@ -736,7 +736,7 @@ def test_get_app_info_localization() -> None:
 
 def test_set_idfa() -> None:
     """Set the advertising ID declaration"""
-
+``
     key_id, key_contents, issuer_id = get_test_data()
 
     client = asconnect.Client(
@@ -760,6 +760,31 @@ def test_set_idfa() -> None:
         honors_limited_ad_tracking=True,
         serves_ads=True,
     )
+
+def test_get_versions_phased_release() -> None:
+    """Test that we can get a specific app store version."""
+    key_id, key_contents, issuer_id = get_test_data()
+
+    client = asconnect.Client(
+        key_id=key_id,
+        key_contents=key_contents,
+        issuer_id=issuer_id,
+    )
+    app = client.app.get_from_bundle_id(APP_ID)
+
+    assert app is not None
+
+    version = client.version.get_version(app_id=app.identifier, version_string="4.2122.0")
+
+    assert version is not None
+
+    release = client.version.get_phased_release(version_id=version.identifier)
+
+    assert release is not None
+    assert release.attributes.phased_release_state is not None
+
+    # Phased releases always belong to a release there is no GET v1/appStoreVersionPhasedRelease/{id}
+    # Only PATCH v1/appStoreVersionPhasedRelease/{id} exists
 
 
 def load_value(

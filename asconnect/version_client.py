@@ -11,6 +11,8 @@ from tenacity import retry, stop_after_delay, wait_random_exponential
 from asconnect.httpclient import HttpClient
 from asconnect.models import (
     AppStoreVersion,
+    AppStoreVersionPhasedRelease,
+    PhasedReleaseState,
     Platform,
     AppStoreVersionLocalization,
     AppStoreReviewDetails,
@@ -94,11 +96,55 @@ class VersionClient:
         """
         return next_or_none(self.get_all(app_id=app_id, version_string=version_string))
 
-    def get_localizations(
+    def get_phased_release(
         self,
         *,
         version_id: str,
-    ) -> Iterator[AppStoreVersionLocalization]:
+    ) -> Optional[AppStoreVersionPhasedRelease]:
+        """Get the phased release of given app version
+
+        :param version_id: The version ID to query for phased releases
+
+        :returns: An AppStoreVersionPhasedRelease if found, None otherwise
+        """
+        url = self.http_client.generate_url(
+            f"appStoreVersions/{version_id}/appStoreVersionPhasedRelease"
+        )
+
+        return next_or_none(self.http_client.get(url=url, data_type=AppStoreVersionPhasedRelease))
+
+    def create_phased_release(
+        self,
+        *,
+        version_id: str,
+        phased_release_state: PhasedReleaseState = PhasedReleaseState.inactive,
+    ) -> Optional[AppStoreVersionPhasedRelease]:
+        """Get the phased release of given app version
+
+        # TODO is inactive what we want.
+
+        :param version_id: The version ID to query for phased releases
+        :param phased_release_state: the state of the initial rollout
+
+        :returns: An AppStoreVersionPhasedRelease if found, None otherwise
+        """
+        url = self.http_client.generate_url(f"appStoreVersionPhasedReleases")
+
+        return self.http_client.post(
+            endpoint="appStoreVersionPhasedReleases",
+            data={
+                "data": {
+                    "attributes": {"phasedReleaseState": phased_release_state},
+                    "type": "appStoreVersionPhasedReleases",
+                    "relationships": {
+                        "appStoreVersion": {"id": version_id, "type": "appStoreVersions"}
+                    },
+                }
+            },
+            data_type=AppStoreVersionPhasedRelease,
+        )
+
+    def get_localizations(self, *, version_id: str) -> Iterator[AppStoreVersionLocalization]:
         """Get the version localizations for an app version.
 
         :param version_id: The version ID to get the localizations for

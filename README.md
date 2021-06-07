@@ -70,10 +70,24 @@ client.version.submit_for_review(version_id=version.identifier)
 ```
 
 It's that easy. Most of the time at least. If you don't have previous version to inherit information from you'll need to do things like set screenshots, reviewer info, etc. All of which is possible through this library.
+### Phased Distribution
+```python
+# Create a new version
+version = client.app.create_new_version(version="1.2.3", app_id=app.identifier)
 
+# Start a phased release
+phased_release = client.app.create_phased_release(version_id=version.identifier, phased_release_state="ACTIVE")
+
+# Check on a phased release
+phased_release = client.app.get_phased_release(version_id=version.identifier)
+
+# Progress/change? a phased release
+# TODO
+```
 # Getting Started
 
 For development `asconnect` uses [`poetry`](https://github.com/python-poetry/poetry)
+
 # Contributing
 
 This project welcomes contributions and suggestions.  Most contributions require you to agree to a
