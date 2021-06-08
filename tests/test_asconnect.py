@@ -736,7 +736,7 @@ def test_get_app_info_localization() -> None:
 
 def test_set_idfa() -> None:
     """Set the advertising ID declaration"""
-``
+
     key_id, key_contents, issuer_id = get_test_data()
 
     client = asconnect.Client(
