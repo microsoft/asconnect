@@ -29,7 +29,7 @@ classifiers = [
 ]
 
 [tool.poetry.dependencies]
-python = "^3.6"
+python = "^3.6.2"
 cryptography = "^3.0.0"
 deserialize = "^1.2.0"
 pyjwt = "^1.7.0"
@@ -37,11 +37,11 @@ requests = "^2.20.0"
 tenacity = "^6.2.0"
 
 [tool.poetry.dev-dependencies]
-black = "=19.10b0"
-mypy = "=0.782"
-pylint = "=2.5.3"
-pytest = "=5.4.3"
-pytest-cov = "=2.10.0"
+black = "=21.5b2"
+mypy = "=0.812"
+pylint = "=2.8.3"
+pytest = "=6.2.4"
+pytest-cov = "=2.12.1"
 pytest-dependency = "=0.5.1"
 
 

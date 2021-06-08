@@ -22,7 +22,12 @@ class BetaReviewClient:
     log: logging.Logger
     http_client: HttpClient
 
-    def __init__(self, *, http_client: HttpClient, log: logging.Logger,) -> None:
+    def __init__(
+        self,
+        *,
+        http_client: HttpClient,
+        log: logging.Logger,
+    ) -> None:
         """Construct a new client object.
 
         :param http_client: The API HTTP client
@@ -141,7 +146,14 @@ class BetaReviewClient:
                         "data": {
                             "attributes": language_info,
                             "type": "betaAppLocalizations",
-                            "relationships": {"app": {"data": {"type": "apps", "id": app_id,}}},
+                            "relationships": {
+                                "app": {
+                                    "data": {
+                                        "type": "apps",
+                                        "id": app_id,
+                                    }
+                                }
+                            },
                         }
                     },
                 )
@@ -184,7 +196,12 @@ class BetaReviewClient:
                             "attributes": attributes,
                             "type": "betaBuildLocalizations",
                             "relationships": {
-                                "build": {"data": {"type": "builds", "id": build_id,}}
+                                "build": {
+                                    "data": {
+                                        "type": "builds",
+                                        "id": build_id,
+                                    }
+                                }
                             },
                         }
                     },
@@ -223,7 +240,14 @@ class BetaReviewClient:
         body = {
             "data": {
                 "type": "betaAppReviewSubmissions",
-                "relationships": {"build": {"data": {"id": build_id, "type": "builds",}}},
+                "relationships": {
+                    "build": {
+                        "data": {
+                            "id": build_id,
+                            "type": "builds",
+                        }
+                    }
+                },
             }
         }
 

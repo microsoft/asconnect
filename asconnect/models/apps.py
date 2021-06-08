@@ -11,8 +11,8 @@ from asconnect.models.common import Resource, Links, Relationship
 class ContentRightsDeclaration(enum.Enum):
     """Contents rights declarations."""
 
-    does_not_use_third_party_content = "DOES_NOT_USE_THIRD_PARTY_CONTENT"
-    uses_third_party_content = "USES_THIRD_PARTY_CONTENT"
+    DOES_NOT_USE_THIRD_PARTY_CONTENT = "DOES_NOT_USE_THIRD_PARTY_CONTENT"
+    USES_THIRD_PARTY_CONTENT = "USES_THIRD_PARTY_CONTENT"
 
 
 @deserialize.key("bundle_id", "bundleId")

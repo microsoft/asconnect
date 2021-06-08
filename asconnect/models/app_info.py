@@ -33,29 +33,29 @@ class AppInfoLocalization(Resource):
 class AppStoreAgeRating(enum.Enum):
     """App store age rating."""
 
-    four_plus = "FOUR_PLUS"
-    nine_plus = "NINE_PLUS"
-    twelve_plus = "TWELVE_PLUS"
-    seventeen_plus = "SEVENTEEN_PLUS"
+    FOUR_PLUS = "FOUR_PLUS"
+    NINE_PLUS = "NINE_PLUS"
+    TWELVE_PLUS = "TWELVE_PLUS"
+    SEVENTEEN_PLUS = "SEVENTEEN_PLUS"
 
 
 class BrazilAgeRating(enum.Enum):
     """Brazil age rating."""
 
-    l = "L"
-    ten = "TEN"
-    twelve = "TWELVE"
-    fourteen = "FOURTEEN"
-    sixteen = "SIXTEEN"
-    eighteen = "EIGHTEEN"
+    L = "L"
+    TEN = "TEN"
+    TWELVE = "TWELVE"
+    FOURTEEN = "FOURTEEN"
+    SIXTEEN = "SIXTEEN"
+    EIGHTEEN = "EIGHTEEN"
 
 
 class KidsAgeBand(enum.Enum):
     """Kids age band."""
 
-    five_and_under = "FIVE_AND_UNDER"
-    six_to_eight = "SIX_TO_EIGHT"
-    nine_to_eleven = "NINE_TO_ELEVEN"
+    FIVE_AND_UNDER = "FIVE_AND_UNDER"
+    SIX_TO_EIGHT = "SIX_TO_EIGHT"
+    NINE_TO_ELEVEN = "NINE_TO_ELEVEN"
 
 
 @deserialize.key("identifier", "id")

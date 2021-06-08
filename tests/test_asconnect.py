@@ -16,6 +16,9 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.abspath(__file__), "..",
 import asconnect  # pylint: disable=wrong-import-order
 
 
+# pylint: disable=too-many-lines
+
+
 APP_ID = ""
 IPA_PATH = ""
 
@@ -45,7 +48,11 @@ def test_token() -> None:
 
     key_id, key_contents, issuer_id = get_test_data()
 
-    client = asconnect.Client(key_id=key_id, key_contents=key_contents, issuer_id=issuer_id,)
+    client = asconnect.Client(
+        key_id=key_id,
+        key_contents=key_contents,
+        issuer_id=issuer_id,
+    )
 
     token = client.http_client.generate_token()
 
@@ -65,7 +72,11 @@ def test_get_apps() -> None:
     """Test get apps."""
     key_id, key_contents, issuer_id = get_test_data()
 
-    client = asconnect.Client(key_id=key_id, key_contents=key_contents, issuer_id=issuer_id,)
+    client = asconnect.Client(
+        key_id=key_id,
+        key_contents=key_contents,
+        issuer_id=issuer_id,
+    )
     apps = list(client.app.get_all())
     assert len(apps) != 0
     print(apps[0])
@@ -75,7 +86,11 @@ def test_get_builds() -> None:
     """Test get apps."""
     key_id, key_contents, issuer_id = get_test_data()
 
-    client = asconnect.Client(key_id=key_id, key_contents=key_contents, issuer_id=issuer_id,)
+    client = asconnect.Client(
+        key_id=key_id,
+        key_contents=key_contents,
+        issuer_id=issuer_id,
+    )
     builds = client.build.get_builds()
     assert builds is not None
 
@@ -84,7 +99,11 @@ def test_get_builds_by_version() -> None:
     """Test get build by version."""
     key_id, key_contents, issuer_id = get_test_data()
 
-    client = asconnect.Client(key_id=key_id, key_contents=key_contents, issuer_id=issuer_id,)
+    client = asconnect.Client(
+        key_id=key_id,
+        key_contents=key_contents,
+        issuer_id=issuer_id,
+    )
     app = client.app.get_from_bundle_id(APP_ID)
     assert app is not None
     builds = next(client.build.get_builds(app_id=app.identifier))
@@ -95,7 +114,11 @@ def test_get_app() -> None:
     """Test that we can get an app."""
     key_id, key_contents, issuer_id = get_test_data()
 
-    client = asconnect.Client(key_id=key_id, key_contents=key_contents, issuer_id=issuer_id,)
+    client = asconnect.Client(
+        key_id=key_id,
+        key_contents=key_contents,
+        issuer_id=issuer_id,
+    )
     app = client.app.get_from_bundle_id(APP_ID)
     assert app is not None
 
@@ -104,10 +127,15 @@ def test_upload() -> None:
     """Test that we can upload a build."""
     key_id, key_contents, issuer_id = get_test_data()
 
-    client = asconnect.Client(key_id=key_id, key_contents=key_contents, issuer_id=issuer_id,)
+    client = asconnect.Client(
+        key_id=key_id,
+        key_contents=key_contents,
+        issuer_id=issuer_id,
+    )
 
     client.build.upload(
-        ipa_path=IPA_PATH, platform=asconnect.Platform.ios,
+        ipa_path=IPA_PATH,
+        platform=asconnect.Platform.IOS,
     )
 
 
@@ -115,7 +143,11 @@ def test_wait_for_build() -> None:
     """Test that we can wait for a build."""
     key_id, key_contents, issuer_id = get_test_data()
 
-    client = asconnect.Client(key_id=key_id, key_contents=key_contents, issuer_id=issuer_id,)
+    client = asconnect.Client(
+        key_id=key_id,
+        key_contents=key_contents,
+        issuer_id=issuer_id,
+    )
     app = client.app.get_from_bundle_id(APP_ID)
     assert app is not None
 
@@ -126,7 +158,11 @@ def test_set_testflight_review_details() -> None:
     """Test that we can set the testflight app review details."""
     key_id, key_contents, issuer_id = get_test_data()
 
-    client = asconnect.Client(key_id=key_id, key_contents=key_contents, issuer_id=issuer_id,)
+    client = asconnect.Client(
+        key_id=key_id,
+        key_contents=key_contents,
+        issuer_id=issuer_id,
+    )
     app = client.app.get_from_bundle_id(APP_ID)
 
     assert app is not None
@@ -147,7 +183,11 @@ def test_get_beta_app_localizations() -> None:
     """Test get beta app localizations."""
     key_id, key_contents, issuer_id = get_test_data()
 
-    client = asconnect.Client(key_id=key_id, key_contents=key_contents, issuer_id=issuer_id,)
+    client = asconnect.Client(
+        key_id=key_id,
+        key_contents=key_contents,
+        issuer_id=issuer_id,
+    )
 
     app = client.app.get_from_bundle_id(APP_ID)
 
@@ -160,7 +200,11 @@ def test_set_testflight_localized_review_details() -> None:
     """Test that we can set the testflight app review details."""
     key_id, key_contents, issuer_id = get_test_data()
 
-    client = asconnect.Client(key_id=key_id, key_contents=key_contents, issuer_id=issuer_id,)
+    client = asconnect.Client(
+        key_id=key_id,
+        key_contents=key_contents,
+        issuer_id=issuer_id,
+    )
     app = client.app.get_from_bundle_id(APP_ID)
 
     assert app is not None
@@ -179,7 +223,11 @@ def test_get_build_localization_details() -> None:
     """Test that we can get a builds localization details."""
     key_id, key_contents, issuer_id = get_test_data()
 
-    client = asconnect.Client(key_id=key_id, key_contents=key_contents, issuer_id=issuer_id,)
+    client = asconnect.Client(
+        key_id=key_id,
+        key_contents=key_contents,
+        issuer_id=issuer_id,
+    )
 
     build = client.build.get_from_build_number(build_number="", bundle_id=APP_ID)
 
@@ -192,14 +240,19 @@ def test_set_whats_new() -> None:
     """Test that we can get a builds localization details."""
     key_id, key_contents, issuer_id = get_test_data()
 
-    client = asconnect.Client(key_id=key_id, key_contents=key_contents, issuer_id=issuer_id,)
+    client = asconnect.Client(
+        key_id=key_id,
+        key_contents=key_contents,
+        issuer_id=issuer_id,
+    )
 
     build = client.build.get_from_build_number(build_number="", bundle_id=APP_ID)
 
     assert build is not None
 
     client.beta_review.set_whats_new_for_build(
-        build.identifier, {"en-US": "Bug fixes and performance improvements"},
+        build.identifier,
+        {"en-US": "Bug fixes and performance improvements"},
     )
 
 
@@ -207,7 +260,11 @@ def test_get_build_beta_detail() -> None:
     """Test that we can get a builds beta details."""
     key_id, key_contents, issuer_id = get_test_data()
 
-    client = asconnect.Client(key_id=key_id, key_contents=key_contents, issuer_id=issuer_id,)
+    client = asconnect.Client(
+        key_id=key_id,
+        key_contents=key_contents,
+        issuer_id=issuer_id,
+    )
 
     build = client.build.get_from_build_number(build_number="", bundle_id=APP_ID)
 
@@ -222,7 +279,11 @@ def test_get_beta_groups_detail() -> None:
     """Test that we can get a builds beta details."""
     key_id, key_contents, issuer_id = get_test_data()
 
-    client = asconnect.Client(key_id=key_id, key_contents=key_contents, issuer_id=issuer_id,)
+    client = asconnect.Client(
+        key_id=key_id,
+        key_contents=key_contents,
+        issuer_id=issuer_id,
+    )
 
     app = client.app.get_from_bundle_id(APP_ID)
 
@@ -241,7 +302,11 @@ def test_set_beta_groups_detail() -> None:
     """Test that we can get a builds beta details."""
     key_id, key_contents, issuer_id = get_test_data()
 
-    client = asconnect.Client(key_id=key_id, key_contents=key_contents, issuer_id=issuer_id,)
+    client = asconnect.Client(
+        key_id=key_id,
+        key_contents=key_contents,
+        issuer_id=issuer_id,
+    )
 
     app = client.app.get_from_bundle_id(APP_ID)
 
@@ -264,7 +329,11 @@ def test_beta_review_submission() -> None:
     """Test that we can submit a build for beta review."""
     key_id, key_contents, issuer_id = get_test_data()
 
-    client = asconnect.Client(key_id=key_id, key_contents=key_contents, issuer_id=issuer_id,)
+    client = asconnect.Client(
+        key_id=key_id,
+        key_contents=key_contents,
+        issuer_id=issuer_id,
+    )
 
     build = client.build.get_from_build_number(build_number="", bundle_id=APP_ID)
 
@@ -277,7 +346,11 @@ def test_create_new_version() -> None:
     """Test that we can create a new app store version."""
     key_id, key_contents, issuer_id = get_test_data()
 
-    client = asconnect.Client(key_id=key_id, key_contents=key_contents, issuer_id=issuer_id,)
+    client = asconnect.Client(
+        key_id=key_id,
+        key_contents=key_contents,
+        issuer_id=issuer_id,
+    )
 
     app = client.app.get_from_bundle_id(APP_ID)
     assert app is not None
@@ -289,7 +362,11 @@ def test_get_versions() -> None:
     """Test that we can get app store versions."""
     key_id, key_contents, issuer_id = get_test_data()
 
-    client = asconnect.Client(key_id=key_id, key_contents=key_contents, issuer_id=issuer_id,)
+    client = asconnect.Client(
+        key_id=key_id,
+        key_contents=key_contents,
+        issuer_id=issuer_id,
+    )
 
     app = client.app.get_from_bundle_id(APP_ID)
     assert app is not None
@@ -302,7 +379,11 @@ def test_get_version() -> None:
     """Test that we can get a specific app store version."""
     key_id, key_contents, issuer_id = get_test_data()
 
-    client = asconnect.Client(key_id=key_id, key_contents=key_contents, issuer_id=issuer_id,)
+    client = asconnect.Client(
+        key_id=key_id,
+        key_contents=key_contents,
+        issuer_id=issuer_id,
+    )
 
     app = client.app.get_from_bundle_id(APP_ID)
     assert app is not None
@@ -315,7 +396,11 @@ def test_get_version_localizations() -> None:
     """Test that we can get a specific app store version."""
     key_id, key_contents, issuer_id = get_test_data()
 
-    client = asconnect.Client(key_id=key_id, key_contents=key_contents, issuer_id=issuer_id,)
+    client = asconnect.Client(
+        key_id=key_id,
+        key_contents=key_contents,
+        issuer_id=issuer_id,
+    )
 
     app = client.app.get_from_bundle_id(APP_ID)
     assert app is not None
@@ -331,7 +416,11 @@ def test_get_screenshot_sets() -> None:
     """Test that we can get screenshot sets from app store version."""
     key_id, key_contents, issuer_id = get_test_data()
 
-    client = asconnect.Client(key_id=key_id, key_contents=key_contents, issuer_id=issuer_id,)
+    client = asconnect.Client(
+        key_id=key_id,
+        key_contents=key_contents,
+        issuer_id=issuer_id,
+    )
 
     app = client.app.get_from_bundle_id(APP_ID)
     assert app is not None
@@ -354,7 +443,11 @@ def test_get_screenshots() -> None:
     """Test that we can get screenshot sets from app store version."""
     key_id, key_contents, issuer_id = get_test_data()
 
-    client = asconnect.Client(key_id=key_id, key_contents=key_contents, issuer_id=issuer_id,)
+    client = asconnect.Client(
+        key_id=key_id,
+        key_contents=key_contents,
+        issuer_id=issuer_id,
+    )
 
     app = client.app.get_from_bundle_id(APP_ID)
     assert app is not None
@@ -381,7 +474,11 @@ def test_delete_screenshot_sets() -> None:
     """Test that we can delete screenshot sets from app store version."""
     key_id, key_contents, issuer_id = get_test_data()
 
-    client = asconnect.Client(key_id=key_id, key_contents=key_contents, issuer_id=issuer_id,)
+    client = asconnect.Client(
+        key_id=key_id,
+        key_contents=key_contents,
+        issuer_id=issuer_id,
+    )
 
     app = client.app.get_from_bundle_id(APP_ID)
     assert app is not None
@@ -399,7 +496,11 @@ def test_create_screenshot_set() -> None:
     """Test that we can create a screenshot set."""
     key_id, key_contents, issuer_id = get_test_data()
 
-    client = asconnect.Client(key_id=key_id, key_contents=key_contents, issuer_id=issuer_id,)
+    client = asconnect.Client(
+        key_id=key_id,
+        key_contents=key_contents,
+        issuer_id=issuer_id,
+    )
 
     app = client.app.get_from_bundle_id(APP_ID)
     assert app is not None
@@ -415,7 +516,7 @@ def test_create_screenshot_set() -> None:
 
     client.screenshots.create_set(
         localization_id=en_us.identifier,
-        display_type=asconnect.models.ScreenshotDisplayType.app_iphone_65,
+        display_type=asconnect.models.ScreenshotDisplayType.APP_IPHONE_65,
     )
 
 
@@ -423,7 +524,11 @@ def test_create_screenshot() -> None:
     """Test that we can create a screenshot set."""
     key_id, key_contents, issuer_id = get_test_data()
 
-    client = asconnect.Client(key_id=key_id, key_contents=key_contents, issuer_id=issuer_id,)
+    client = asconnect.Client(
+        key_id=key_id,
+        key_contents=key_contents,
+        issuer_id=issuer_id,
+    )
 
     app = client.app.get_from_bundle_id(APP_ID)
     assert app is not None
@@ -441,11 +546,12 @@ def test_create_screenshot() -> None:
 
     screenshot_set = client.screenshots.create_set(
         localization_id=en_us.identifier,
-        display_type=asconnect.models.ScreenshotDisplayType.app_iphone_65,
+        display_type=asconnect.models.ScreenshotDisplayType.APP_IPHONE_65,
     )
 
     screenshot = client.screenshots.upload_screenshot(
-        file_path="/path/to/screenshot.png", screenshot_set_id=screenshot_set.identifier,
+        file_path="/path/to/screenshot.png",
+        screenshot_set_id=screenshot_set.identifier,
     )
 
     print(screenshot)
@@ -583,7 +689,11 @@ def test_upload_all_screenshots() -> None:
     """Test that we can upload all screenshots."""
     key_id, key_contents, issuer_id = get_test_data()
 
-    client = asconnect.Client(key_id=key_id, key_contents=key_contents, issuer_id=issuer_id,)
+    client = asconnect.Client(
+        key_id=key_id,
+        key_contents=key_contents,
+        issuer_id=issuer_id,
+    )
 
     app = client.app.get_from_bundle_id(APP_ID)
     assert app is not None
@@ -603,7 +713,11 @@ def test_get_app_info_localization() -> None:
     """Test that we can get app info localization."""
     key_id, key_contents, issuer_id = get_test_data()
 
-    client = asconnect.Client(key_id=key_id, key_contents=key_contents, issuer_id=issuer_id,)
+    client = asconnect.Client(
+        key_id=key_id,
+        key_contents=key_contents,
+        issuer_id=issuer_id,
+    )
 
     app = client.app.get_from_bundle_id(APP_ID)
     assert app is not None
@@ -616,7 +730,7 @@ def test_get_app_info_localization() -> None:
         app_info
         for app_info in app_infos
         if app_info.attributes.app_store_state
-        != asconnect.models.AppStoreVersionState.ready_for_sale
+        != asconnect.models.AppStoreVersionState.READY_FOR_SALE
     ][0]
 
 
@@ -625,7 +739,11 @@ def test_set_idfa() -> None:
 
     key_id, key_contents, issuer_id = get_test_data()
 
-    client = asconnect.Client(key_id=key_id, key_contents=key_contents, issuer_id=issuer_id,)
+    client = asconnect.Client(
+        key_id=key_id,
+        key_contents=key_contents,
+        issuer_id=issuer_id,
+    )
 
     app = client.app.get_from_bundle_id("com.microsoft.Office.Outlook")
     assert app is not None
@@ -633,7 +751,7 @@ def test_set_idfa() -> None:
     version = client.version.get_version(app_id=app.identifier, version_string="4.2108.0")
     assert version is not None
 
-    v = client.version.get_idfa(version_id=version.identifier)
+    _ = client.version.get_idfa(version_id=version.identifier)
 
     client.version.set_idfa(
         version_id=version.identifier,
@@ -694,6 +812,7 @@ def load_value(
     """
 
     language_code = localized_info.attributes.locale
+    assert language_code is not None
     paths_to_check = []
 
     if version:
@@ -786,7 +905,7 @@ def set_localized_app_info(client: asconnect.Client, app_id: str) -> None:
         app_info
         for app_info in app_infos
         if app_info.attributes.app_store_state
-        != asconnect.models.AppStoreVersionState.ready_for_sale
+        != asconnect.models.AppStoreVersionState.READY_FOR_SALE
     ][0]
 
     for localized_info in client.app_info.get_localizations(app_info_id=app_info.identifier):
@@ -891,7 +1010,7 @@ def set_build(client: asconnect.Client, app_id: str, version_id: str, version: s
 
     build = asconnect.utilities.next_or_none(
         client.build.get_builds(
-            app_id=app_id, sort=asconnect.sorting.BuildsSort.UploadedDateReversed, version=version
+            app_id=app_id, sort=asconnect.sorting.BuildsSort.UPLOADED_DATE_REVERSED, version=version
         )
     )
 

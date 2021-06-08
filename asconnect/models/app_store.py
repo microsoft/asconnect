@@ -11,39 +11,39 @@ from asconnect.models.common import Resource, Links, Relationship
 class Platform(enum.Enum):
     """The different platforms an app can be for."""
 
-    ios = "IOS"
-    macos = "MAC_OS"
-    tvos = "TV_OS"
+    IOS = "IOS"
+    MACOS = "MAC_OS"
+    TVOS = "TV_OS"
 
 
 class ReleaseType(enum.Enum):
     """App store release type."""
 
-    manual = "MANUAL"
-    after_approval = "AFTER_APPROVAL"
-    scheduled = "SCHEDULED"
+    MANUAL = "MANUAL"
+    AFTER_APPROVAL = "AFTER_APPROVAL"
+    SCHEDULED = "SCHEDULED"
 
 
 class AppStoreVersionState(enum.Enum):
     """App store version state."""
 
-    developer_removed_from_sale = "DEVELOPER_REMOVED_FROM_SALE"
-    developer_rejected = "DEVELOPER_REJECTED"
-    in_review = "IN_REVIEW"
-    invalid_binary = "INVALID_BINARY"
-    metadata_rejected = "METADATA_REJECTED"
-    pending_apple_release = "PENDING_APPLE_RELEASE"
-    pending_contract = "PENDING_CONTRACT"
-    pending_developer_release = "PENDING_DEVELOPER_RELEASE"
-    prepare_for_submission = "PREPARE_FOR_SUBMISSION"
-    preorder_ready_for_sale = "PREORDER_READY_FOR_SALE"
-    processing_for_app_store = "PROCESSING_FOR_APP_STORE"
-    ready_for_sale = "READY_FOR_SALE"
-    rejected = "REJECTED"
-    removed_from_sale = "REMOVED_FROM_SALE"
-    waiting_for_export_compliance = "WAITING_FOR_EXPORT_COMPLIANCE"
-    waiting_for_review = "WAITING_FOR_REVIEW"
-    replaced_with_new_version = "REPLACED_WITH_NEW_VERSION"
+    DEVELOPER_REMOVED_FROM_SALE = "DEVELOPER_REMOVED_FROM_SALE"
+    DEVELOPER_REJECTED = "DEVELOPER_REJECTED"
+    IN_REVIEW = "IN_REVIEW"
+    INVALID_BINARY = "INVALID_BINARY"
+    METADATA_REJECTED = "METADATA_REJECTED"
+    PENDING_APPLE_RELEASE = "PENDING_APPLE_RELEASE"
+    PENDING_CONTRACT = "PENDING_CONTRACT"
+    PENDING_DEVELOPER_RELEASE = "PENDING_DEVELOPER_RELEASE"
+    PREPARE_FOR_SUBMISSION = "PREPARE_FOR_SUBMISSION"
+    PREORDER_READY_FOR_SALE = "PREORDER_READY_FOR_SALE"
+    PROCESSING_FOR_APP_STORE = "PROCESSING_FOR_APP_STORE"
+    READY_FOR_SALE = "READY_FOR_SALE"
+    REJECTED = "REJECTED"
+    REMOVED_FROM_SALE = "REMOVED_FROM_SALE"
+    WAITING_FOR_EXPORT_COMPLIANCE = "WAITING_FOR_EXPORT_COMPLIANCE"
+    WAITING_FOR_REVIEW = "WAITING_FOR_REVIEW"
+    REPLACED_WITH_NEW_VERSION = "REPLACED_WITH_NEW_VERSION"
 
 
 @deserialize.key("identifier", "id")

@@ -22,7 +22,12 @@ class BuildClient:
     log: logging.Logger
     http_client: HttpClient
 
-    def __init__(self, *, http_client: HttpClient, log: logging.Logger,) -> None:
+    def __init__(
+        self,
+        *,
+        http_client: HttpClient,
+        log: logging.Logger,
+    ) -> None:
         """Construct a new client object.
 
         :param http_client: The API HTTP client

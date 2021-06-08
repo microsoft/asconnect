@@ -10,9 +10,9 @@ from typing import Optional
 class Platform(enum.Enum):
     """The platforms that altool supports."""
 
-    ios = "ios"
-    macos = "osx"
-    tvos = "appletvos"
+    IOS = "ios"
+    MACOS = "osx"
+    TVOS = "appletvos"
 
 
 def upload(
@@ -61,7 +61,7 @@ def upload(
         "Beginning upload. This can take a while and will not show any output while in progress."
     )
 
-    upload_process = subprocess.Popen(
+    upload_process = subprocess.Popen(  # pylint: disable=consider-using-with
         command,
         universal_newlines=True,
         stdout=subprocess.PIPE,

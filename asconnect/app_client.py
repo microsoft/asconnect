@@ -4,7 +4,7 @@
 # Licensed under the MIT license.
 
 import logging
-from typing import Iterator, List, Optional
+from typing import Any, Dict, Iterator, List, Optional
 
 from asconnect.httpclient import HttpClient
 from asconnect.models import App, AppStoreVersion, Platform
@@ -16,7 +16,12 @@ class AppClient:
     log: logging.Logger
     http_client: HttpClient
 
-    def __init__(self, *, http_client: HttpClient, log: logging.Logger,) -> None:
+    def __init__(
+        self,
+        *,
+        http_client: HttpClient,
+        log: logging.Logger,
+    ) -> None:
         """Construct a new client object.
 
         :param http_client: The API HTTP client
@@ -26,7 +31,10 @@ class AppClient:
         self.http_client = http_client
         self.log = log.getChild("app")
 
-    def get_all(self, url: Optional[str] = None,) -> Iterator[App]:
+    def get_all(
+        self,
+        url: Optional[str] = None,
+    ) -> Iterator[App]:
         """Get all apps.
 
         :param Optional[str] url: The URL to use (will be generated if not supplied)
@@ -54,7 +62,7 @@ class AppClient:
         *,
         version: str,
         app_id: str,
-        platform: Platform = Platform.ios,
+        platform: Platform = Platform.IOS,
         copyright_text: Optional[str] = None,
         uses_idfa: Optional[bool] = None,
     ) -> AppStoreVersion:
@@ -71,7 +79,7 @@ class AppClient:
         :returns: An AppStoreVersion
         """
 
-        attributes = {
+        attributes: Dict[str, Any] = {
             "platform": platform.value,
             "versionString": version,
             "releaseType": "MANUAL",  # TODO This should support scheduling
@@ -89,7 +97,14 @@ class AppClient:
                 "data": {
                     "attributes": attributes,
                     "type": "appStoreVersions",
-                    "relationships": {"app": {"data": {"type": "apps", "id": app_id,}}},
+                    "relationships": {
+                        "app": {
+                            "data": {
+                                "type": "apps",
+                                "id": app_id,
+                            }
+                        }
+                    },
                 }
             },
             data_type=AppStoreVersion,

@@ -19,7 +19,12 @@ class ScreenshotClient:
     log: logging.Logger
     http_client: HttpClient
 
-    def __init__(self, *, http_client: HttpClient, log: logging.Logger,) -> None:
+    def __init__(
+        self,
+        *,
+        http_client: HttpClient,
+        log: logging.Logger,
+    ) -> None:
         """Construct a new client object.
 
         :param http_client: The API HTTP client
@@ -29,7 +34,11 @@ class ScreenshotClient:
         self.http_client = http_client
         self.log = log.getChild("screenshot")
 
-    def get_sets(self, *, localization_id: str,) -> Iterator[AppScreenshotSet]:
+    def get_sets(
+        self,
+        *,
+        localization_id: str,
+    ) -> Iterator[AppScreenshotSet]:
         """Get the screenshot sets for an app localization.
 
         :param localization_id: The localization ID to get the screenshot sets for
@@ -59,7 +68,11 @@ class ScreenshotClient:
         if raw_response.status_code != 204:
             raise AppStoreConnectError(raw_response.json())
 
-    def get_screenshots(self, *, screenshot_set_id: str,) -> Iterator[AppScreenshot]:
+    def get_screenshots(
+        self,
+        *,
+        screenshot_set_id: str,
+    ) -> Iterator[AppScreenshot]:
         """Get the screenshots for a set.
 
         :param screenshot_set_id: The screenshot set ID to get the screenshots for
@@ -127,7 +140,10 @@ class ScreenshotClient:
                     "type": "appScreenshotSets",
                     "relationships": {
                         "appStoreVersionLocalization": {
-                            "data": {"type": "appStoreVersionLocalizations", "id": localization_id,}
+                            "data": {
+                                "type": "appStoreVersionLocalizations",
+                                "id": localization_id,
+                            }
                         }
                     },
                 }
@@ -159,7 +175,10 @@ class ScreenshotClient:
                     "type": "appScreenshots",
                     "relationships": {
                         "appScreenshotSet": {
-                            "data": {"type": "appScreenshotSets", "id": screenshot_set_id,}
+                            "data": {
+                                "type": "appScreenshotSets",
+                                "id": screenshot_set_id,
+                            }
                         }
                     },
                 }

@@ -25,7 +25,12 @@ class VersionClient:
     log: logging.Logger
     http_client: HttpClient
 
-    def __init__(self, *, http_client: HttpClient, log: logging.Logger,) -> None:
+    def __init__(
+        self,
+        *,
+        http_client: HttpClient,
+        log: logging.Logger,
+    ) -> None:
         """Construct a new client object.
 
         :param http_client: The API HTTP client
@@ -35,7 +40,11 @@ class VersionClient:
         self.http_client = http_client
         self.log = log.getChild("version")
 
-    def get(self, *, version_id: str,) -> Optional[AppStoreVersion]:
+    def get(
+        self,
+        *,
+        version_id: str,
+    ) -> Optional[AppStoreVersion]:
         """Get the version with the given ID
 
         :param version_id: The version ID to get
@@ -85,7 +94,11 @@ class VersionClient:
         """
         return next_or_none(self.get_all(app_id=app_id, version_string=version_string))
 
-    def get_localizations(self, *, version_id: str,) -> Iterator[AppStoreVersionLocalization]:
+    def get_localizations(
+        self,
+        *,
+        version_id: str,
+    ) -> Iterator[AppStoreVersionLocalization]:
         """Get the version localizations for an app version.
 
         :param version_id: The version ID to get the localizations for
@@ -106,7 +119,12 @@ class VersionClient:
 
         self.http_client.patch(
             endpoint=f"appStoreVersions/{version_id}/relationships/build",
-            data={"data": {"type": "builds", "id": build_id,}},
+            data={
+                "data": {
+                    "type": "builds",
+                    "id": build_id,
+                }
+            },
             data_type=None,
         )
 
@@ -266,7 +284,11 @@ class VersionClient:
             data_type=IdfaDeclaration,
         )
 
-    def submit_for_review(self, *, version_id: str,) -> None:
+    def submit_for_review(
+        self,
+        *,
+        version_id: str,
+    ) -> None:
         """Submit the version for review
 
         :param version_id: The ID of the version to submit for review

@@ -94,7 +94,11 @@ class HttpClient:
         return f"https://api.appstoreconnect.apple.com/v1/{endpoint}"
 
     def get(
-        self, *, data_type: Type, endpoint: Optional[str] = None, url: Optional[str] = None,
+        self,
+        *,
+        data_type: Type,
+        endpoint: Optional[str] = None,
+        url: Optional[str] = None,
     ) -> Iterator[Any]:
         """Perform a GET to the endpoint specified.
 
@@ -117,7 +121,10 @@ class HttpClient:
             url = self.generate_url(endpoint)
 
         while True:
-            raw_response = requests.get(url, headers={"Authorization": f"Bearer {token}"},)
+            raw_response = requests.get(
+                url,
+                headers={"Authorization": f"Bearer {token}"},
+            )
             response_data = self.extract_data(raw_response)
 
             if response_data["data"] is None:
@@ -261,7 +268,8 @@ class HttpClient:
             url = self.generate_url(endpoint)
 
         return requests.delete(
-            url, headers={"Authorization": f"Bearer {token}", "Content-Type": "application/json"},
+            url,
+            headers={"Authorization": f"Bearer {token}", "Content-Type": "application/json"},
         )
 
     def put_chunk(

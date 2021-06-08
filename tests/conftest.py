@@ -6,7 +6,7 @@ import subprocess
 import _pytest
 
 
-def pytest_configure(config: _pytest.config.Config) -> None:
+def pytest_configure(config: _pytest.config.Config) -> None:  # type: ignore
     """Run configuration before tests.
 
     :param config: The pytest config object

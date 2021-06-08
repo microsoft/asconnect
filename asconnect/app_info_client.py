@@ -17,7 +17,12 @@ class AppInfoClient:
     log: logging.Logger
     http_client: HttpClient
 
-    def __init__(self, *, http_client: HttpClient, log: logging.Logger,) -> None:
+    def __init__(
+        self,
+        *,
+        http_client: HttpClient,
+        log: logging.Logger,
+    ) -> None:
         """Construct a new client object.
 
         :param http_client: The API HTTP client
@@ -42,7 +47,10 @@ class AppInfoClient:
         return list(self.http_client.get(url=url, data_type=List[AppInfo]))
 
     def get_localizations(
-        self, *, app_info_id: str, locale: Optional[str] = None,
+        self,
+        *,
+        app_info_id: str,
+        locale: Optional[str] = None,
     ) -> Iterator[AppInfoLocalization]:
         """Get the app info for an app.
 
