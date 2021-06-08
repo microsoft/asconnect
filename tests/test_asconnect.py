@@ -761,15 +761,12 @@ def test_set_idfa() -> None:
         serves_ads=True,
     )
 
+
 def test_get_versions_phased_release() -> None:
     """Test that we can get a specific app store version."""
     key_id, key_contents, issuer_id = get_test_data()
 
-    client = asconnect.Client(
-        key_id=key_id,
-        key_contents=key_contents,
-        issuer_id=issuer_id,
-    )
+    client = asconnect.Client(key_id=key_id, key_contents=key_contents, issuer_id=issuer_id,)
     app = client.app.get_from_bundle_id(APP_ID)
 
     assert app is not None
