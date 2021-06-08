@@ -128,8 +128,6 @@ class VersionClient:
 
         :returns: An AppStoreVersionPhasedRelease if found, None otherwise
         """
-        url = self.http_client.generate_url(f"appStoreVersionPhasedReleases")
-
         return self.http_client.post(
             endpoint="appStoreVersionPhasedReleases",
             data={
@@ -139,6 +137,43 @@ class VersionClient:
                     "relationships": {
                         "appStoreVersion": {"id": version_id, "type": "appStoreVersions"}
                     },
+                }
+            },
+            data_type=AppStoreVersionPhasedRelease,
+        )
+
+    def delete_phased_release(
+        self,
+        *,
+        phased_release_id: str,
+    ) -> Optional[AppStoreVersionPhasedRelease]:
+        """Delete a Phased Release
+
+        :param phased_release_id: The ID of the release set to delete
+
+        :raises AppStoreConnectError: On failure to delete"""
+
+        self.http_client.delete(url=f"appStoreVersionPhasedReleases/{phased_release_id}")
+
+    def patch_phased_release(
+        self,
+        *,
+        phased_release_id: str,
+        phased_release_state: PhasedReleaseState = PhasedReleaseState.inactive,
+    ) -> Optional[AppStoreVersionPhasedRelease]:
+        """Update a Phased Release
+
+        :param phased_release_id: The ID of the release set to modify
+        :param phased_release_state: The state of the phased release to transition to
+
+        """
+        return self.http_client.patch(
+            endpoint=f"appStoreVersionPhasedReleases/{release_id}",
+            data={
+                "data": {
+                    "attributes": {"phasedReleaseState": phased_release_state},
+                    "type": "appStoreVersionPhasedReleases",
+                    "id": release_id,
                 }
             },
             data_type=AppStoreVersionPhasedRelease,

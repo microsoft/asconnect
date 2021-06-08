@@ -75,14 +75,19 @@ It's that easy. Most of the time at least. If you don't have previous version to
 # Create a new version
 version = client.app.create_new_version(version="1.2.3", app_id=app.identifier)
 
-# Start a phased release
-phased_release = client.app.create_phased_release(version_id=version.identifier, phased_release_state="ACTIVE")
+# Start a versions' phased release
+phased_release = client.version.create_phased_release(version_id=version.identifier, phased_release_state=PhasedReleaseState.active)
 
 # Check on a phased release
-phased_release = client.app.get_phased_release(version_id=version.identifier)
+phased_release = client.version.get_phased_release(version_id=version.identifier)
 
-# Progress/change? a phased release
-# TODO
+# Advance or modify a phased release
+phased_release = client.version.patch_phased_release(phased_release_id=phased_release.identifier, phased_release_state=PhasedReleaseState.active)
+phased_release = client.version.patch_phased_release(phased_release_id=phased_release.identifier, phased_release_state=PhasedReleaseState.pause)
+phased_release = client.version.patch_phased_release(phased_release_id=phased_release.identifier, phased_release_state=PhasedReleaseState.complete)
+
+# Delete
+client.version.delete_phased_release(phased_release_id=phased_release.identifier)
 ```
 # Getting Started
 
