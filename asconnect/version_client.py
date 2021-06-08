@@ -96,11 +96,7 @@ class VersionClient:
         """
         return next_or_none(self.get_all(app_id=app_id, version_string=version_string))
 
-    def get_phased_release(
-        self,
-        *,
-        version_id: str,
-    ) -> Optional[AppStoreVersionPhasedRelease]:
+    def get_phased_release(self, *, version_id: str,) -> Optional[AppStoreVersionPhasedRelease]:
         """Get the phased release of given app version
 
         :param version_id: The version ID to query for phased releases
@@ -142,11 +138,7 @@ class VersionClient:
             data_type=AppStoreVersionPhasedRelease,
         )
 
-    def delete_phased_release(
-        self,
-        *,
-        phased_release_id: str,
-    ) -> Optional[AppStoreVersionPhasedRelease]:
+    def delete_phased_release(self, *, phased_release_id: str,) -> None:
         """Delete a Phased Release
 
         :param phased_release_id: The ID of the release set to delete
@@ -166,14 +158,16 @@ class VersionClient:
         :param phased_release_id: The ID of the release set to modify
         :param phased_release_state: The state of the phased release to transition to
 
+        :returns: The modified AppStoreVersionPhasedRelease
+
         """
         return self.http_client.patch(
-            endpoint=f"appStoreVersionPhasedReleases/{release_id}",
+            endpoint=f"appStoreVersionPhasedReleases/{phased_release_id}",
             data={
                 "data": {
                     "attributes": {"phasedReleaseState": phased_release_state},
                     "type": "appStoreVersionPhasedReleases",
-                    "id": release_id,
+                    "id": phased_release_id,
                 }
             },
             data_type=AppStoreVersionPhasedRelease,
