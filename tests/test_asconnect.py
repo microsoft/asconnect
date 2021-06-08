@@ -620,6 +620,30 @@ def test_get_app_info_localization() -> None:
     ][0]
 
 
+def test_set_idfa() -> None:
+    """Set the advertising ID declaration"""
+
+    key_id, key_contents, issuer_id = get_test_data()
+
+    client = asconnect.Client(key_id=key_id, key_contents=key_contents, issuer_id=issuer_id,)
+
+    app = client.app.get_from_bundle_id("com.microsoft.Office.Outlook")
+    assert app is not None
+
+    version = client.version.get_version(app_id=app.identifier, version_string="4.2108.0")
+    assert version is not None
+
+    v = client.version.get_idfa(version_id=version.identifier)
+
+    client.version.set_idfa(
+        version_id=version.identifier,
+        attributes_action_with_previous_ad=True,
+        attributes_app_installation_to_previous_ad=True,
+        honors_limited_ad_tracking=True,
+        serves_ads=True,
+    )
+
+
 def load_value(
     *,
     root_path: str,
