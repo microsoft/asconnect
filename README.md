@@ -71,7 +71,9 @@ client.version.submit_for_review(version_id=version.identifier)
 
 It's that easy. Most of the time at least. If you don't have previous version to inherit information from you'll need to do things like set screenshots, reviewer info, etc. All of which is possible through this library.
 
+# Getting Started
 
+For development `asconnect` uses [`poetry`](https://github.com/python-poetry/poetry)
 # Contributing
 
 This project welcomes contributions and suggestions.  Most contributions require you to agree to a
