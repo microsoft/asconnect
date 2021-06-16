@@ -96,7 +96,11 @@ class VersionClient:
         """
         return next_or_none(self.get_all(app_id=app_id, version_string=version_string))
 
-    def get_phased_release(self, *, version_id: str,) -> Optional[AppStoreVersionPhasedRelease]:
+    def get_phased_release(
+        self,
+        *,
+        version_id: str,
+    ) -> Optional[AppStoreVersionPhasedRelease]:
         """Get the phased release of given app version
 
         :param version_id: The version ID to query for phased releases
@@ -128,17 +132,21 @@ class VersionClient:
             endpoint="appStoreVersionPhasedReleases",
             data={
                 "data": {
-                    "attributes": {"phasedReleaseState": phased_release_state},
+                    "attributes": {"phasedReleaseState": phased_release_state.value},
                     "type": "appStoreVersionPhasedReleases",
                     "relationships": {
-                        "appStoreVersion": {"id": version_id, "type": "appStoreVersions"}
+                        "appStoreVersion": {"data": {"id": version_id, "type": "appStoreVersions"}}
                     },
                 }
             },
             data_type=AppStoreVersionPhasedRelease,
         )
 
-    def delete_phased_release(self, *, phased_release_id: str,) -> None:
+    def delete_phased_release(
+        self,
+        *,
+        phased_release_id: str,
+    ) -> None:
         """Delete a Phased Release
 
         :param phased_release_id: The ID of the release set to delete
@@ -165,7 +173,7 @@ class VersionClient:
             endpoint=f"appStoreVersionPhasedReleases/{phased_release_id}",
             data={
                 "data": {
-                    "attributes": {"phasedReleaseState": phased_release_state},
+                    "attributes": {"phasedReleaseState": phased_release_state.value},
                     "type": "appStoreVersionPhasedReleases",
                     "id": phased_release_id,
                 }

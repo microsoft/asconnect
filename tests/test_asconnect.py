@@ -10,6 +10,16 @@ import re
 import sys
 from typing import Optional, Tuple, Union
 
+from asconnect.models import (
+    AppStoreVersion,
+    AppStoreVersionPhasedRelease,
+    PhasedReleaseState,
+    Platform,
+    AppStoreVersionLocalization,
+    AppStoreReviewDetails,
+    IdfaDeclaration,
+)
+
 import jwt
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.abspath(__file__), "..", "..")))
@@ -356,6 +366,26 @@ def test_create_new_version() -> None:
     assert app is not None
 
     client.app.create_new_version(version="1.2.3", app_id=app.identifier)
+
+
+def test_create_new_phased_release() -> None:
+    """Test that we can create a new app store version."""
+    key_id, key_contents, issuer_id = get_test_data()
+
+    client = asconnect.Client(
+        key_id=key_id,
+        key_contents=key_contents,
+        issuer_id=issuer_id,
+    )
+
+    app = client.app.get_from_bundle_id(APP_ID)
+    assert app is not None
+
+    version = client.app.create_new_version(version="1.2.3", app_id=app.identifier)
+    release = client.version.create_phased_release(version_id=version.identifier)
+
+    assert release is not None
+    assert release.attributes.phased_release_state.value is "INACTIVE"
 
 
 def test_get_versions() -> None:
@@ -766,22 +796,23 @@ def test_get_versions_phased_release() -> None:
     """Test that we can get a specific app store version."""
     key_id, key_contents, issuer_id = get_test_data()
 
-    client = asconnect.Client(key_id=key_id, key_contents=key_contents, issuer_id=issuer_id,)
+    client = asconnect.Client(
+        key_id=key_id,
+        key_contents=key_contents,
+        issuer_id=issuer_id,
+    )
     app = client.app.get_from_bundle_id(APP_ID)
 
     assert app is not None
 
-    version = client.version.get_version(app_id=app.identifier, version_string="4.2122.0")
+    version = client.version.get_version(app_id=app.identifier, version_string="1.2.3")
 
     assert version is not None
 
     release = client.version.get_phased_release(version_id=version.identifier)
 
     assert release is not None
-    assert release.attributes.phased_release_state is not None
-
-    # Phased releases always belong to a release there is no GET v1/appStoreVersionPhasedRelease/{id}
-    # Only PATCH v1/appStoreVersionPhasedRelease/{id} exists
+    assert release.attributes.phased_release_state is not Nones
 
 
 def load_value(

@@ -27,7 +27,7 @@ class ReleaseType(enum.Enum):
 class PhasedReleaseState(enum.Enum):
     """App store phased release state.
 
-    inactive: TODO(?) default state
+    inactive: initial state
     active: over the course of 7 days the app will be rolled out in randomly selected phases
     paused: the rollout is paused
     complete: the rollout is complete
