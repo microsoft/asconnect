@@ -119,9 +119,7 @@ class VersionClient:
         version_id: str,
         phased_release_state: PhasedReleaseState = PhasedReleaseState.inactive,
     ) -> Optional[AppStoreVersionPhasedRelease]:
-        """Get the phased release of given app version
-
-        # TODO is inactive what we want.
+        """Create a phased release for a given app version, defaulting to creating an inactive release.
 
         :param version_id: The version ID to query for phased releases
         :param phased_release_state: the state of the initial rollout
