@@ -24,6 +24,21 @@ class ReleaseType(enum.Enum):
     SCHEDULED = "SCHEDULED"
 
 
+class PhasedReleaseState(enum.Enum):
+    """App store phased release state.
+
+    inactive: initial state
+    active: over the course of 7 days the app will be rolled out in randomly selected phases
+    paused: the rollout is paused
+    complete: the rollout is complete
+    """
+
+    inactive = "INACTIVE"
+    active = "ACTIVE"
+    paused = "PAUSED"
+    complete = "COMPLETE"
+
+
 class AppStoreVersionState(enum.Enum):
     """App store version state."""
 
@@ -72,6 +87,27 @@ class AppStoreVersion(Resource):
     identifier: str
     attributes: Attributes
     relationships: Optional[Dict[str, Relationship]]
+    links: Links
+
+
+@deserialize.key("identifier", "id")
+class AppStoreVersionPhasedRelease(Resource):
+    """Represents an app store phased release."""
+
+    @deserialize.key("current_day_number", "currentDayNumber")
+    @deserialize.key("phased_release_state", "phasedReleaseState")
+    @deserialize.key("start_date", "startDate")
+    @deserialize.key("total_pause_duration", "totalPauseDuration")
+    class Attributes:
+        """Attributes."""
+
+        current_day_number: int
+        phased_release_state: PhasedReleaseState
+        start_date: Optional[str]
+        total_pause_duration: int
+
+    identifier: str
+    attributes: Attributes
     links: Links
 
 
