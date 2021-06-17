@@ -812,7 +812,7 @@ def test_get_versions_phased_release() -> None:
     release = client.version.get_phased_release(version_id=version.identifier)
 
     assert release is not None
-    assert release.attributes.phased_release_state is not Nones
+    assert release.attributes.phased_release_state is not None
 
 
 def load_value(
