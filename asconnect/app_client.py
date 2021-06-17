@@ -7,7 +7,7 @@ import logging
 from typing import Any, Dict, Iterator, List, Optional
 
 from asconnect.httpclient import HttpClient
-from asconnect.models import App, AppStoreVersion, AppStoreVersionPhasedRelease, Platform
+from asconnect.models import App, AppStoreVersion, Platform
 
 
 class AppClient:

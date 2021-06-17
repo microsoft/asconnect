@@ -117,7 +117,7 @@ class VersionClient:
         self,
         *,
         version_id: str,
-        phased_release_state: PhasedReleaseState = PhasedReleaseState.inactive,
+        phased_release_state: PhasedReleaseState = PhasedReleaseState.INACTIVE,
     ) -> Optional[AppStoreVersionPhasedRelease]:
         """Create a phased release for a given app version, defaulting to creating an inactive release.
 
@@ -157,7 +157,7 @@ class VersionClient:
         self,
         *,
         phased_release_id: str,
-        phased_release_state: PhasedReleaseState = PhasedReleaseState.inactive,
+        phased_release_state: PhasedReleaseState = PhasedReleaseState.INACTIVE,
     ) -> Optional[AppStoreVersionPhasedRelease]:
         """Update a Phased Release
 

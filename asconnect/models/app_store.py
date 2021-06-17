@@ -33,10 +33,10 @@ class PhasedReleaseState(enum.Enum):
     complete: the rollout is complete
     """
 
-    inactive = "INACTIVE"
-    active = "ACTIVE"
-    paused = "PAUSED"
-    complete = "COMPLETE"
+    INACTIVE = "INACTIVE"
+    ACTIVE = "ACTIVE"
+    PAUSED = "PAUSED"
+    COMPLETE = "COMPLETE"
 
 
 class AppStoreVersionState(enum.Enum):

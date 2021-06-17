@@ -10,16 +10,6 @@ import re
 import sys
 from typing import Optional, Tuple, Union
 
-from asconnect.models import (
-    AppStoreVersion,
-    AppStoreVersionPhasedRelease,
-    PhasedReleaseState,
-    Platform,
-    AppStoreVersionLocalization,
-    AppStoreReviewDetails,
-    IdfaDeclaration,
-)
-
 import jwt
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.abspath(__file__), "..", "..")))
@@ -385,7 +375,7 @@ def test_create_new_phased_release() -> None:
     release = client.version.create_phased_release(version_id=version.identifier)
 
     assert release is not None
-    assert release.attributes.phased_release_state.value is "INACTIVE"
+    assert release.attributes.phased_release_state is asconnect.models.PhasedReleaseState.INACTIVE
 
 
 def test_get_versions() -> None:
