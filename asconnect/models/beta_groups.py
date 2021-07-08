@@ -4,7 +4,7 @@ from typing import Dict, Optional
 
 import deserialize
 
-from asconnect.models.common import Links, Relationship, Resource
+from asconnect.models.common import BaseAttributes, Links, Relationship, Resource
 
 
 @deserialize.key("identifier", "id")
@@ -19,7 +19,7 @@ class BetaGroup(Resource):
     @deserialize.key("public_link_limit_enabled", "publicLinkLimitEnabled")
     @deserialize.key("created_date", "createdDate")
     @deserialize.key("feedback_enabled", "feedbackEnabled")
-    class Attributes:
+    class Attributes(BaseAttributes):
         """Represents beta group attributes."""
 
         is_internal_group: bool

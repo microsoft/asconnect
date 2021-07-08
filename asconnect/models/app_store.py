@@ -5,7 +5,7 @@ from typing import Dict, Optional
 
 import deserialize
 
-from asconnect.models.common import Resource, Links, Relationship
+from asconnect.models.common import BaseAttributes, Links, Relationship, Resource
 
 
 class Platform(enum.Enum):
@@ -71,7 +71,7 @@ class AppStoreVersion(Resource):
     @deserialize.key("uses_idfa", "usesIdfa")
     @deserialize.key("version_string", "versionString")
     @deserialize.key("created_date", "createdDate")
-    class Attributes:
+    class Attributes(BaseAttributes):
         """Attributes."""
 
         platform: Platform
@@ -98,7 +98,7 @@ class AppStoreVersionPhasedRelease(Resource):
     @deserialize.key("phased_release_state", "phasedReleaseState")
     @deserialize.key("start_date", "startDate")
     @deserialize.key("total_pause_duration", "totalPauseDuration")
-    class Attributes:
+    class Attributes(BaseAttributes):
         """Attributes."""
 
         current_day_number: int
@@ -122,7 +122,7 @@ class AppStoreReviewDetails(Resource):
     @deserialize.key("demo_account_name", "demoAccountName")
     @deserialize.key("demo_account_password", "demoAccountPassword")
     @deserialize.key("demo_account_required", "demoAccountRequired")
-    class Attributes:
+    class Attributes(BaseAttributes):
         """Attributes."""
 
         contact_email: str

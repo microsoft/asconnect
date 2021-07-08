@@ -5,7 +5,7 @@ from typing import Dict, List, Optional
 
 import deserialize
 
-from asconnect.models.common import Resource, Links, Relationship
+from asconnect.models.common import BaseAttributes, Resource, Links, Relationship, Reprable
 
 
 class ScreenshotDisplayType(enum.Enum):
@@ -54,7 +54,7 @@ class AppScreenshotSet(Resource):
     """Represents an app store screenshot set."""
 
     @deserialize.key("screenshot_display_type", "screenshotDisplayType")
-    class Attributes:
+    class Attributes(BaseAttributes):
         """Attributes."""
 
         screenshot_display_type: ScreenshotDisplayType
@@ -65,7 +65,7 @@ class AppScreenshotSet(Resource):
     links: Links
 
 
-class AppMediaStateError:
+class AppMediaStateError(Reprable):
     """An app media state error."""
 
     code: str
@@ -81,7 +81,7 @@ class AppMediaAssetStateState(enum.Enum):
     FAILED = "FAILED"
 
 
-class AppMediaAssetState:
+class AppMediaAssetState(Reprable):
     """An app media asset state."""
 
     errors: List[AppMediaStateError]
@@ -90,7 +90,7 @@ class AppMediaAssetState:
 
 
 @deserialize.key("template_url", "templateUrl")
-class ImageAsset:
+class ImageAsset(Reprable):
     """An image asset."""
 
     template_url: str
@@ -98,7 +98,7 @@ class ImageAsset:
     width: int
 
 
-class UploadOperationHeader:
+class UploadOperationHeader(Reprable):
     """An upload operation header."""
 
     name: str
@@ -106,7 +106,7 @@ class UploadOperationHeader:
 
 
 @deserialize.key("request_headers", "requestHeaders")
-class UploadOperation:
+class UploadOperation(Reprable):
     """An upload operation."""
 
     length: int
@@ -128,7 +128,7 @@ class AppScreenshot(Resource):
     @deserialize.key("image_asset", "imageAsset")
     @deserialize.key("source_file_checksum", "sourceFileChecksum")
     @deserialize.key("upload_operations", "uploadOperations")
-    class Attributes:
+    class Attributes(BaseAttributes):
         """Attributes."""
 
         asset_delivery_state: AppMediaAssetState

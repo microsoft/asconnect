@@ -5,7 +5,7 @@ from typing import Dict, Optional
 
 import deserialize
 
-from asconnect.models.common import Links, Relationship, Resource
+from asconnect.models.common import BaseAttributes, Links, Relationship, Resource
 
 
 class ExternalBetaState(enum.Enum):
@@ -44,7 +44,7 @@ class BuildBetaDetail(Resource):
     @deserialize.key("auto_notify_enabled", "autoNotifyEnabled")
     @deserialize.key("external_build_state", "externalBuildState")
     @deserialize.key("internal_build_state", "internalBuildState")
-    class Attributes:
+    class Attributes(BaseAttributes):
         """Represents beta build localization attributes."""
 
         auto_notify_enabled: bool

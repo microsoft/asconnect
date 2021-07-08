@@ -4,7 +4,7 @@ from typing import Dict, Optional
 
 import deserialize
 
-from asconnect.models.common import Resource, Links, Relationship
+from asconnect.models.common import BaseAttributes, Resource, Links, Relationship
 
 
 @deserialize.key("identifier", "id")
@@ -18,7 +18,7 @@ class BetaAppReviewDetail(Resource):
     @deserialize.key("demo_account_name", "demoAccountName")
     @deserialize.key("demo_account_password", "demoAccountPassword")
     @deserialize.key("demo_account_required", "demoAccountRequired")
-    class Attributes:
+    class Attributes(BaseAttributes):
         """Attributes."""
 
         contact_email: str

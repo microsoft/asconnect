@@ -5,7 +5,7 @@ from typing import Dict, Optional
 
 import deserialize
 
-from asconnect.models.common import Links, Relationship, Resource
+from asconnect.models.common import BaseAttributes, Links, Relationship, Resource
 from asconnect.models.app_store import AppStoreVersionState
 
 
@@ -15,7 +15,7 @@ class AppInfoLocalization(Resource):
 
     @deserialize.key("privacy_policy_text", "privacyPolicyText")
     @deserialize.key("privacy_policy_url", "privacyPolicyUrl")
-    class Attributes:
+    class Attributes(BaseAttributes):
         """Represents app info localization attributes."""
 
         locale: Optional[str]
@@ -66,7 +66,7 @@ class AppInfo(Resource):
     @deserialize.key("app_store_state", "appStoreState")
     @deserialize.key("brazil_age_rating", "brazilAgeRating")
     @deserialize.key("kids_age_band", "kidsAgeBand")
-    class Attributes:
+    class Attributes(BaseAttributes):
         """Represents app info localization attributes."""
 
         app_store_age_rating: AppStoreAgeRating

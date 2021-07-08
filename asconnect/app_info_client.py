@@ -42,6 +42,7 @@ class AppInfoClient:
 
         :returns: A list to AppInfoLocalization
         """
+        self.log.debug(f"Getting app info for {app_id}")
         url = self.http_client.generate_url(f"apps/{app_id}/appInfos")
 
         return list(self.http_client.get(url=url, data_type=List[AppInfo]))
@@ -59,6 +60,8 @@ class AppInfoClient:
 
         :returns: An iterator to AppInfoLocalization
         """
+
+        self.log.debug(f"Getting localizations for {app_info_id} (locale={locale})")
         url = self.http_client.generate_url(f"appInfos/{app_info_id}/appInfoLocalizations")
 
         query_parameters = {}
@@ -92,6 +95,8 @@ class AppInfoClient:
         :returns: The new updated app info localization
         """
 
+        self.log.info("Setting localization properties")
+
         attributes = {}
 
         if name:
@@ -106,15 +111,19 @@ class AppInfoClient:
         if subtitle:
             attributes["subtitle"] = subtitle
 
+        data = {
+            "data": {
+                "attributes": attributes,
+                "type": "appInfoLocalizations",
+                "id": localization_id,
+            }
+        }
+
+        self.log.debug(f"Localization properties: {data}")
+
         return self.http_client.patch(
             endpoint=f"appInfoLocalizations/{localization_id}",
-            data={
-                "data": {
-                    "attributes": attributes,
-                    "type": "appInfoLocalizations",
-                    "id": localization_id,
-                }
-            },
+            data=data,
             data_type=AppInfoLocalization,
         )
 
@@ -144,6 +153,8 @@ class AppInfoClient:
         :returns: The new updated app version localization
         """
 
+        self.log.info("Setting localization version properties")
+
         attributes = {}
 
         if description:
@@ -164,14 +175,18 @@ class AppInfoClient:
         if whats_new:
             attributes["whatsNew"] = whats_new
 
+        data = {
+            "data": {
+                "attributes": attributes,
+                "type": "appStoreVersionLocalizations",
+                "id": version_localization_id,
+            }
+        }
+
+        self.log.debug(f"Localization version properties: {data}")
+
         return self.http_client.patch(
             endpoint=f"appStoreVersionLocalizations/{version_localization_id}",
-            data={
-                "data": {
-                    "attributes": attributes,
-                    "type": "appStoreVersionLocalizations",
-                    "id": version_localization_id,
-                }
-            },
+            data=data,
             data_type=AppStoreVersionLocalization,
         )

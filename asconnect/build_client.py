@@ -56,6 +56,9 @@ class BuildClient:
 
         :returns: A list of builds
         """
+
+        self.log.info("Getting builds...")
+
         if url is None:
             url = self.http_client.generate_url("builds")
 
@@ -84,6 +87,9 @@ class BuildClient:
 
         :returns: A build if found, None otherwise
         """
+
+        self.log.info(f"Getting build {identifier}")
+
         url = self.http_client.generate_url(f"builds/{identifier}")
 
         return next_or_none(self.http_client.get(url=url, data_type=Build))
@@ -96,7 +102,12 @@ class BuildClient:
 
         :returns: The build if found, None otherwise
         """
+
+        self.log.info(f"Getting build from build number {build_number} for bundle {bundle_id}")
+
         for build in self.get_builds(build_number=build_number):
+            self.log.debug(f"Checking build {build}")
+
             # TODO use app id directly for this
             assert build.relationships is not None
             related_link = build.relationships["app"].links.related
@@ -140,6 +151,7 @@ class BuildClient:
 
             if build.attributes.processing_state != "PROCESSING":
                 return build
+
             self.log.info(
                 f"Build {build_number} has not finished processing. Will check again in {wait_time} seconds..."
             )
@@ -152,6 +164,7 @@ class BuildClient:
 
         :returns: An iterator to the beta app localizations
         """
+        self.log.debug(f"Get beta detail for build {build}")
         assert build.relationships is not None
         url = build.relationships["buildBetaDetail"].links.related
         return next_or_none(self.http_client.get(url=url, data_type=BuildBetaDetail))
@@ -162,6 +175,8 @@ class BuildClient:
         :param ipa_path: The path to the IPA
         :param platform: The platform the app is for
         """
+
+        self.log.info(f"Uploading IPA {ipa_path} for platform {platform}")
 
         key_path = write_key(self.http_client.key_id, self.http_client.key_contents)
 

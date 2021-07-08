@@ -4,7 +4,7 @@ from typing import Dict, Optional
 
 import deserialize
 
-from asconnect.models.common import Resource, Links, Relationship
+from asconnect.models.common import BaseAttributes, Links, Relationship, Resource
 
 
 @deserialize.key("identifier", "id")
@@ -15,7 +15,7 @@ class AppStoreVersionLocalization(Resource):
     @deserialize.key("promotional_text", "promotionalText")
     @deserialize.key("support_url", "supportUrl")
     @deserialize.key("whats_new", "whatsNew")
-    class Attributes:
+    class Attributes(BaseAttributes):
         """Attributes."""
 
         description: str

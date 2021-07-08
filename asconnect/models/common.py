@@ -34,8 +34,28 @@ class Meta:
     paging: Paging
 
 
+class Reprable:
+    """Something that can be automatically repr'd."""
+
+    def __repr__(self) -> str:
+        """Generate and return the repl representation of the object.
+
+        :return: A repl representation of the object
+        """
+        properties = {}
+        for attribute_name in dir(self):
+            if attribute_name.startswith("__"):
+                continue
+            properties[attribute_name] = getattr(self, attribute_name)
+        return str(properties)
+
+
 @deserialize.key("resource_type", "type")
-class Resource:
+class Resource(Reprable):
     """Represents a resource."""
 
     resource_type: str
+
+
+class BaseAttributes(Reprable):
+    """Represents base attributes."""

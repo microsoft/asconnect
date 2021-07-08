@@ -53,6 +53,7 @@ class VersionClient:
 
         :returns: An AppStoreVersion if found, None otherwise
         """
+        self.log.debug(f"Getting version {version_id}")
         url = self.http_client.generate_url(f"appStoreVersions/{version_id}")
 
         return next_or_none(self.http_client.get(url=url, data_type=AppStoreVersion))
@@ -72,6 +73,10 @@ class VersionClient:
 
         :returns: An iterator to AppStoreVersion
         """
+        self.log.info(f"Getting all versions of {app_id}...")
+        self.log.debug(f"Version string: {version_string}")
+        self.log.debug(f"Platform: {platform}")
+
         url = self.http_client.generate_url(f"apps/{app_id}/appStoreVersions")
 
         query_parameters = {}
@@ -94,6 +99,7 @@ class VersionClient:
 
         :returns: An AppStoreVersion
         """
+        self.log.info(f"Getting version {version_string} of {app_id}")
         return next_or_none(self.get_all(app_id=app_id, version_string=version_string))
 
     def get_phased_release(
@@ -107,6 +113,7 @@ class VersionClient:
 
         :returns: An AppStoreVersionPhasedRelease if found, None otherwise
         """
+        self.log.debug(f"Getting phased release of {version_id}")
         url = self.http_client.generate_url(
             f"appStoreVersions/{version_id}/appStoreVersionPhasedRelease"
         )
@@ -126,6 +133,9 @@ class VersionClient:
 
         :returns: An AppStoreVersionPhasedRelease if found, None otherwise
         """
+
+        self.log.info(f"Creating phased release ({phased_release_state}) for version {version_id}")
+
         return self.http_client.post(
             endpoint="appStoreVersionPhasedReleases",
             data={
@@ -151,6 +161,7 @@ class VersionClient:
 
         :raises AppStoreConnectError: On failure to delete"""
 
+        self.log.info(f"Deleting phased release: {phased_release_id}")
         self.http_client.delete(url=f"appStoreVersionPhasedReleases/{phased_release_id}")
 
     def patch_phased_release(
@@ -167,6 +178,9 @@ class VersionClient:
         :returns: The modified AppStoreVersionPhasedRelease
 
         """
+        self.log.info(
+            f"Patching phased release {phased_release_id} to state {phased_release_state}"
+        )
         return self.http_client.patch(
             endpoint=f"appStoreVersionPhasedReleases/{phased_release_id}",
             data={
@@ -186,6 +200,7 @@ class VersionClient:
 
         :returns: An AppStoreVersion
         """
+        self.log.info("Getting localizations for version {version_id}...")
         url = self.http_client.generate_url(
             f"appStoreVersions/{version_id}/appStoreVersionLocalizations"
         )
@@ -197,6 +212,8 @@ class VersionClient:
         :param version_id: The ID of the version to set the build on
         :param build_id: The ID of the build to set
         """
+
+        self.log.info(f"Setting build {build_id} for version {version_id}")
 
         self.http_client.patch(
             endpoint=f"appStoreVersions/{version_id}/relationships/build",
@@ -216,6 +233,7 @@ class VersionClient:
 
         :returns: The app review details if set, None otherwise
         """
+        self.log.debug(f"Getting app review details for version {version_id}")
         return next_or_none(
             self.http_client.get(
                 endpoint=f"appStoreVersions/{version_id}/appStoreReviewDetail",
@@ -251,6 +269,8 @@ class VersionClient:
         :returns: The review details
         """
 
+        self.log.info(f"Setting app review details for version {version_id}")
+
         existing_details = self.get_app_review_details(version_id=version_id)
 
         attributes = {
@@ -263,6 +283,8 @@ class VersionClient:
             "demoAccountRequired": demo_account_required,
             "notes": notes,
         }
+
+        self.log.debug(f"Attributes: {attributes}")
 
         if existing_details:
             return self.http_client.patch(
@@ -299,6 +321,7 @@ class VersionClient:
 
         :returns: The declaration if set, None otherwise
         """
+        self.log.info(f"Getting current IDFA for version {version_id}")
         return next_or_none(
             self.http_client.get(
                 endpoint=f"appStoreVersions/{version_id}/idfaDeclaration",
@@ -326,7 +349,8 @@ class VersionClient:
         :returns: The review details
         """
 
-        self.log.debug("Getting existing IDFA...")
+        self.log.info(f"Setting IDFA for version {version_id}")
+
         existing_details = self.get_idfa(version_id=version_id)
 
         attributes = {
@@ -335,6 +359,8 @@ class VersionClient:
             "honorsLimitedAdTracking": honors_limited_ad_tracking,
             "servesAds": serves_ads,
         }
+
+        self.log.debug(f"Attributes: {attributes}")
 
         if existing_details:
             self.log.debug("Patching existing IDFA")
@@ -374,6 +400,8 @@ class VersionClient:
 
         :param version_id: The ID of the version to submit for review
         """
+
+        self.log.info(f"Submitting version for review {version_id}")
 
         self.http_client.post(
             endpoint="appStoreVersionSubmissions",

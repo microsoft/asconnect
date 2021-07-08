@@ -45,6 +45,7 @@ class ScreenshotClient:
 
         :returns: An iterator to ScreenshotSet
         """
+        self.log.debug(f"Getting screenshot sets for {localization_id}...")
         url = self.http_client.generate_url(
             f"appStoreVersionLocalizations/{localization_id}/appScreenshotSets"
         )
@@ -58,6 +59,8 @@ class ScreenshotClient:
 
         :raises AppStoreConnectError: On failure to delete
         """
+
+        self.log.info(f"Deleting screenshot set {screenshot_set_id}")
 
         if delete_all_screenshots:
             self.delete_screenshots_in_set(screenshot_set_id=screenshot_set_id)
@@ -79,6 +82,7 @@ class ScreenshotClient:
 
         :returns: An iterator to AppScreenshot
         """
+        self.log.debug(f"Getting screenshots {screenshot_set_id}")
         url = self.http_client.generate_url(f"appScreenshotSets/{screenshot_set_id}/appScreenshots")
         yield from self.http_client.get(url=url, data_type=List[AppScreenshot])
 
@@ -89,9 +93,8 @@ class ScreenshotClient:
 
         :raises AppStoreConnectError: On failure to delete
         """
+        self.log.info(f"Deleting screenshot {screenshot_id}")
         url = self.http_client.generate_url(f"appScreenshots/{screenshot_id}")
-
-        self.log.debug(f"Deleting screenshot with id: {screenshot_id}")
         raw_response = self.http_client.delete(url=url)
 
         if raw_response.status_code != 204:
@@ -102,8 +105,9 @@ class ScreenshotClient:
 
         :param screenshot_set_id: The set to delete the screenshots in
         """
+        self.log.info(f"Deleting screenshots in set {screenshot_set_id}")
         for screenshot in self.get_screenshots(screenshot_set_id=screenshot_set_id):
-            self.log.info(f"Deleting screenshot: {screenshot.attributes.file_name}")
+            self.log.info(f"Deleting screenshot {screenshot.attributes.file_name}")
             self.delete_screenshot(screenshot_id=screenshot.identifier)
 
     def delete_all_sets_in_localization(self, *, localization_id: str) -> None:
@@ -111,6 +115,7 @@ class ScreenshotClient:
 
         :param localization_id: The localization to delete the sets from
         """
+        self.log.info(f"Deleting all screenshot sets in localization {localization_id}")
         for screenshot_set in self.get_sets(localization_id=localization_id):
             self.log.info(
                 f"Deleting screenshot set: {screenshot_set.attributes.screenshot_display_type.value}"
@@ -132,22 +137,28 @@ class ScreenshotClient:
         :returns: The new screenshot set
         """
 
+        self.log.info(f"Creating screenshot set {localization_id} / {display_type}")
+
+        data = {
+            "data": {
+                "attributes": {"screenshotDisplayType": display_type.value},
+                "type": "appScreenshotSets",
+                "relationships": {
+                    "appStoreVersionLocalization": {
+                        "data": {
+                            "type": "appStoreVersionLocalizations",
+                            "id": localization_id,
+                        }
+                    }
+                },
+            }
+        }
+
+        self.log.debug(f"Data: {data}")
+
         return self.http_client.post(
             endpoint="appScreenshotSets",
-            data={
-                "data": {
-                    "attributes": {"screenshotDisplayType": display_type.value},
-                    "type": "appScreenshotSets",
-                    "relationships": {
-                        "appStoreVersionLocalization": {
-                            "data": {
-                                "type": "appStoreVersionLocalizations",
-                                "id": localization_id,
-                            }
-                        }
-                    },
-                }
-            },
+            data=data,
             data_type=AppScreenshotSet,
         )
 
@@ -163,6 +174,8 @@ class ScreenshotClient:
 
         :returns: The new screenshot set
         """
+
+        self.log.debug(f"Creating screenshot reservarion for {screenshot_set_id} at {file_path}")
 
         file_name = os.path.basename(file_path)
         file_size = os.path.getsize(file_path)
@@ -197,6 +210,8 @@ class ScreenshotClient:
         :raises AppStoreConnectError: On error when creating the set
         """
 
+        self.log.debug(f"Uploading screenshot contents {file_path}: {upload_operations}")
+
         # Start by ordering the upload oeprations by offset (so we can just go in order)
         upload_operations = sorted(upload_operations, key=lambda operation: operation.offset)
 
@@ -221,6 +236,8 @@ class ScreenshotClient:
         :returns: The new screenshot
         """
 
+        self.log.debug(f"Setting screenshot uploaded {screenshot}: {file_hash}")
+
         return self.http_client.patch(
             endpoint=f"appScreenshots/{screenshot.identifier}",
             data={
@@ -241,6 +258,8 @@ class ScreenshotClient:
 
         :return: The screenshot
         """
+
+        self.log.info(f"Uploading screenshot {file_path} to set {screenshot_set_id}")
 
         checksum = md5_file(file_path)
 

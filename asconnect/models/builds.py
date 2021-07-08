@@ -4,11 +4,11 @@ from typing import Dict, Optional
 
 import deserialize
 
-from asconnect.models.common import Links, Relationship, Resource
+from asconnect.models.common import BaseAttributes, Links, Relationship, Reprable, Resource
 
 
 @deserialize.key("template_url", "templateUrl")
-class IconAssetToken:
+class IconAssetToken(Reprable):
     """Represents an icon asset token item."""
 
     template_url: str
@@ -22,7 +22,7 @@ class IconAssetToken:
 @deserialize.key("icon_asset_token", "iconAssetToken")
 @deserialize.key("processing_state", "processingState")
 @deserialize.key("uses_non_exempt_encryption", "usesNonExemptEncryption")
-class BuildAttributes:
+class BuildAttributes(BaseAttributes):
     """Represents build attributes."""
 
     version: str

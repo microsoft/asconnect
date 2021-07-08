@@ -64,6 +64,9 @@ class BetaReviewClient:
 
         :returns: The raw response
         """
+
+        self.log.info(f"Setting beta app review details on {app_id}")
+
         attributes: Dict[str, Any] = {
             "contactEmail": contact_email,
             "contactFirstName": contact_first_name,
@@ -85,6 +88,8 @@ class BetaReviewClient:
 
         body = {"data": {"attributes": attributes, "id": app_id, "type": "betaAppReviewDetails"}}
 
+        self.log.debug(f"Beta review details: {body}")
+
         return self.http_client.patch(
             endpoint=f"betaAppReviewDetails/{app_id}", data=body, data_type=BetaAppReviewDetail
         )
@@ -96,6 +101,7 @@ class BetaReviewClient:
 
         :returns: An iterator to the beta app localizations
         """
+        self.log.debug(f"Getting beta app localizations for {app_id}")
         url = self.http_client.generate_url(f"apps/{app_id}/betaAppLocalizations")
         yield from self.http_client.get(url=url, data_type=List[BetaAppLocalization])
 
@@ -106,6 +112,7 @@ class BetaReviewClient:
 
         :returns: An iterator to the beta app localizations
         """
+        self.log.debug(f"Getting beta build localizations for {build_id}")
         url = self.http_client.generate_url(f"betaBuildLocalizations?filter[build]={build_id}")
         yield from self.http_client.get(url=url, data_type=List[BetaBuildLocalization])
 
@@ -118,13 +125,18 @@ class BetaReviewClient:
         :param localizations: A dictionary of language codes to localization attributes
         """
 
+        self.log.info(f"Setting beta app localizations for {app_id}")
+
         existing_localizations = {}
 
         for localization in self.get_beta_app_localizations(app_id):
             existing_localizations[localization.attributes.locale] = localization
 
         for language_code, language_info in localizations.items():
+            self.log.debug(f"Setting localizations for {language_code}: {language_info}")
             existing_localization = existing_localizations.get(language_code)
+
+            self.log.debug(f"Existing localization: {existing_localization}")
 
             if existing_localization:
                 self.http_client.patch(
@@ -165,12 +177,18 @@ class BetaReviewClient:
         :param localizations: A dictionary of language codes to localization info
         """
 
+        self.log.info(f"Setting whats new for build {build_id}")
+        self.log.debug(f"Localizations: {localizations}")
+
         existing_localizations = {}
 
         for localization in self.get_beta_build_localizations(build_id):
             existing_localizations[localization.attributes.locale] = localization
 
+        self.log.debug(f"Existing localizations: {existing_localizations}")
+
         for language_code, whats_new in localizations.items():
+            self.log.debug(f"Setting localization for {language_code}")
             attributes = {"whatsNew": whats_new}
 
             existing_localization = existing_localizations.get(language_code)
@@ -214,6 +232,7 @@ class BetaReviewClient:
 
         :returns: An iterator to the beta groups
         """
+        self.log.debug(f"Getting beta groups for {app_id}")
         url = self.http_client.generate_url(f"betaGroups?filter[app]={app_id}")
         yield from self.http_client.get(url=url, data_type=List[BetaGroup])
 
@@ -223,6 +242,8 @@ class BetaReviewClient:
         :param build_id: The build ID for the build to set the groups on
         :param beta_groups: The groups to add
         """
+        self.log.info(f"Setting beta groups on {build_id}: {beta_groups}")
+
         data = []
         for beta_group in beta_groups:
             data.append({"type": "betaGroups", "id": beta_group.identifier})
@@ -237,6 +258,8 @@ class BetaReviewClient:
         :param build_id: The build ID for the build to set the groups on
         """
 
+        self.log.info(f"Submitting build for beta review: {build_id}")
+
         body = {
             "data": {
                 "type": "betaAppReviewSubmissions",
@@ -250,5 +273,7 @@ class BetaReviewClient:
                 },
             }
         }
+
+        self.log.debug(f"Data: {body}")
 
         self.http_client.post(endpoint="betaAppReviewSubmissions", data=body)

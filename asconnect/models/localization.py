@@ -4,7 +4,7 @@ from typing import Dict, Optional
 
 import deserialize
 
-from asconnect.models.common import Links, Relationship, Resource
+from asconnect.models.common import BaseAttributes, Links, Relationship, Resource
 
 
 @deserialize.key("identifier", "id")
@@ -15,7 +15,7 @@ class BetaAppLocalization(Resource):
     @deserialize.key("marketing_url", "marketingUrl")
     @deserialize.key("privacy_policy_url", "privacyPolicyUrl")
     @deserialize.key("tv_os_privacy_policy", "tvOsPrivacyPolicy")
-    class Attributes:
+    class Attributes(BaseAttributes):
         """Represents beta app localization attributes."""
 
         description: str
@@ -36,7 +36,7 @@ class BetaBuildLocalization(Resource):
     """Represents a build localization."""
 
     @deserialize.key("whats_new", "whatsNew")
-    class Attributes:
+    class Attributes(BaseAttributes):
         """Represents beta build localization attributes."""
 
         locale: str

@@ -4,7 +4,7 @@ from typing import Dict, Optional
 
 import deserialize
 
-from asconnect.models.common import Resource, Links, Relationship
+from asconnect.models.common import BaseAttributes, Resource, Links, Relationship
 
 
 @deserialize.key("identifier", "id")
@@ -17,7 +17,7 @@ class IdfaDeclaration(Resource):
     )
     @deserialize.key("honors_limited_ad_tracking", "honorsLimitedAdTracking")
     @deserialize.key("serves_ads", "servesAds")
-    class Attributes:
+    class Attributes(BaseAttributes):
         """Attributes."""
 
         attributes_action_with_previous_ad: bool

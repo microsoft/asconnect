@@ -41,7 +41,7 @@ class AppClient:
 
         :returns: A list of apps
         """
-
+        self.log.debug("Getting all apps...")
         url = self.http_client.generate_url("apps")
         yield from self.http_client.get(url=url, data_type=List[App])
 
@@ -52,6 +52,7 @@ class AppClient:
 
         :returns: The app if found, None otherwise
         """
+        self.log.debug(f"Getting app with bundle id '{bundle_id}'...")
         for app in self.get_all():
             if app.bundle_id == bundle_id:
                 return app
@@ -79,6 +80,8 @@ class AppClient:
         :returns: An AppStoreVersion
         """
 
+        self.log.info(f"Creating version {version} for {app_id}...")
+
         attributes: Dict[str, Any] = {
             "platform": platform.value,
             "versionString": version,
@@ -91,21 +94,25 @@ class AppClient:
         if uses_idfa is not None:
             attributes["usesIdfa"] = uses_idfa
 
+        data = {
+            "data": {
+                "attributes": attributes,
+                "type": "appStoreVersions",
+                "relationships": {
+                    "app": {
+                        "data": {
+                            "type": "apps",
+                            "id": app_id,
+                        }
+                    }
+                },
+            }
+        }
+
+        self.log.debug(f"Creation data: {data}")
+
         return self.http_client.post(
             endpoint="appStoreVersions",
-            data={
-                "data": {
-                    "attributes": attributes,
-                    "type": "appStoreVersions",
-                    "relationships": {
-                        "app": {
-                            "data": {
-                                "type": "apps",
-                                "id": app_id,
-                            }
-                        }
-                    },
-                }
-            },
+            data=data,
             data_type=AppStoreVersion,
         )

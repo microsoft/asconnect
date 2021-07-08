@@ -5,7 +5,7 @@ from typing import Dict, Optional
 
 import deserialize
 
-from asconnect.models.common import Resource, Links, Relationship
+from asconnect.models.common import BaseAttributes, Resource, Links, Relationship
 
 
 class ContentRightsDeclaration(enum.Enum):
@@ -20,7 +20,7 @@ class ContentRightsDeclaration(enum.Enum):
 @deserialize.key("available_in_new_territories", "availableInNewTerritories")
 @deserialize.key("content_rights_declaration", "contentRightsDeclaration")
 @deserialize.key("is_or_ever_was_made_for_kids", "isOrEverWasMadeForKids")
-class AppAttributes:
+class AppAttributes(BaseAttributes):
     """Represents app attributes."""
 
     bundle_id: str
