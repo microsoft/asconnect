@@ -391,6 +391,35 @@ class VersionClient:
             data_type=IdfaDeclaration,
         )
 
+    def set_uses_idfa(
+        self,
+        *,
+        version_id: str,
+    ) -> AppStoreVersion:
+        """Set that the app version uses an IDFA
+
+        Note: This is a workaround due to the fact that setting this property
+        when creating the app fails.
+
+        :param version_id: The ID of the version to set the build on
+
+        :returns: The IDFA details
+        """
+
+        self.log.info(f"Setting uses IDFA for version {version_id}")
+
+        return self.http_client.patch(
+            endpoint=f"appStoreVersions/{version_id}",
+            data={
+                "data": {
+                    "type": "appStoreVersions",
+                    "id": version_id,
+                    "attributes": {"usesIdfa": True},
+                }
+            },
+            data_type=AppStoreVersion,
+        )
+
     def submit_for_review(
         self,
         *,

@@ -768,8 +768,10 @@ def test_set_idfa() -> None:
     app = client.app.get_from_bundle_id("com.microsoft.Office.Outlook")
     assert app is not None
 
-    version = client.version.get_version(app_id=app.identifier, version_string="4.2108.0")
+    version = client.version.get_version(app_id=app.identifier, version_string="4.2135.0")
     assert version is not None
+
+    client.version.set_uses_idfa(version_id=version.identifier)
 
     _ = client.version.get_idfa(version_id=version.identifier)
 
