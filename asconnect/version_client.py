@@ -6,8 +6,6 @@
 import logging
 from typing import Iterator, List, Optional
 
-from tenacity import retry, stop_after_delay, wait_random_exponential
-
 from asconnect.httpclient import HttpClient
 from asconnect.models import (
     AppStoreVersion,
@@ -313,7 +311,6 @@ class VersionClient:
             data_type=AppStoreReviewDetails,
         )
 
-    @retry(wait=wait_random_exponential(max=100), stop=stop_after_delay(500))
     def get_idfa(self, *, version_id: str) -> Optional[IdfaDeclaration]:
         """Get the advertising ID declaration.
 

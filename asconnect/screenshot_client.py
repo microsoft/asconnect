@@ -69,7 +69,7 @@ class ScreenshotClient:
         raw_response = self.http_client.delete(url=url)
 
         if raw_response.status_code != 204:
-            raise AppStoreConnectError(raw_response.json())
+            raise AppStoreConnectError(raw_response)
 
     def get_screenshots(
         self,
@@ -98,7 +98,7 @@ class ScreenshotClient:
         raw_response = self.http_client.delete(url=url)
 
         if raw_response.status_code != 204:
-            raise AppStoreConnectError(raw_response.json())
+            raise AppStoreConnectError(raw_response)
 
     def delete_screenshots_in_set(self, *, screenshot_set_id: str) -> None:
         """Delete all screenshots in set.

@@ -17,11 +17,12 @@ from asconnect.exceptions import AppStoreConnectError
 class HttpClient:
     """Base HTTP client for the ASC API."""
 
-    key_id: str
-    key_contents: str
-    issuer_id: str
+    _key_id: str
+    _key_contents: str
+    _issuer_id: str
     log: logging.Logger
 
+    _credentials_valid: bool
     _cached_token_info: Optional[Tuple[str, datetime.datetime]]
 
     def __init__(
@@ -40,9 +41,10 @@ class HttpClient:
         :param log: Any base logger to be used (one will be created if not supplied)
         """
 
-        self.key_id = key_id
-        self.key_contents = key_contents
-        self.issuer_id = issuer_id
+        self._key_id = key_id
+        self._key_contents = key_contents
+        self._issuer_id = issuer_id
+        self._credentials_valid = False
 
         if log is None:
             self.log = logging.getLogger("asconnect")
@@ -50,6 +52,57 @@ class HttpClient:
             self.log = log.getChild("asconnect")
 
         self._cached_token_info = None
+
+    @property
+    def key_contents(self) -> str:
+        """Get key contents.
+
+        :returns: Key contents
+        """
+        return self._key_contents
+
+    @key_contents.setter
+    def key_contents(self, value: str) -> None:
+        """Set key contents.
+
+        :param value: The new value to set to
+        """
+        self._key_contents = value
+        self._credentials_valid = False
+
+    @property
+    def key_id(self) -> str:
+        """Get key ID.
+
+        :returns: Key ID
+        """
+        return self._key_id
+
+    @key_id.setter
+    def key_id(self, value: str) -> None:
+        """Set key ID.
+
+        :param value: The new value to set to
+        """
+        self._key_id = value
+        self._credentials_valid = False
+
+    @property
+    def issuer_id(self) -> str:
+        """Get issuer ID.
+
+        :returns: Issuer ID
+        """
+        return self._issuer_id
+
+    @issuer_id.setter
+    def issuer_id(self, value: str) -> None:
+        """Set issuer ID.
+
+        :param value: The new value to set to
+        """
+        self._issuer_id = value
+        self._credentials_valid = False
 
     def generate_token(self) -> str:
         """Generate a new JWT token.
@@ -93,12 +146,21 @@ class HttpClient:
         _ = self
         return f"https://api.appstoreconnect.apple.com/v1/{endpoint}"
 
+    def verify_response(self, response: requests.Response) -> None:
+        """Perform some checks on the response.
+
+        :param response: The response to check
+        """
+        if response.status_code >= 200 and response.status_code < 300:
+            self._credentials_valid = True
+
     def get(
         self,
         *,
         data_type: Type,
         endpoint: Optional[str] = None,
         url: Optional[str] = None,
+        attempts: int = 3,
     ) -> Iterator[Any]:
         """Perform a GET to the endpoint specified.
 
@@ -108,8 +170,10 @@ class HttpClient:
         :param Type data_type: The class to deserialize the data of the response to
         :param Optional[str] endpoint: The endpoint to perform the GET on
         :param Optional[str] url: The full URL to perform the GET on
+        :param int attempts: Number of attempts remaining to try this call
 
         :raises ValueError: If neither url or endpoint are specified
+        :raises AppStoreConnectError: If an error with the API occurs
 
         :returns: The raw response
         """
@@ -125,7 +189,22 @@ class HttpClient:
                 url,
                 headers={"Authorization": f"Bearer {token}"},
             )
-            response_data = self.extract_data(raw_response)
+
+            self.verify_response(raw_response)
+
+            try:
+                response_data = self.extract_data(raw_response)
+            except AppStoreConnectError as ex:
+                if attempts > 1 and (
+                    ex.response.status_code >= 500
+                    or (ex.response.status_code == 401 and self._credentials_valid)
+                ):
+                    yield from self.get(
+                        data_type=data_type, endpoint=endpoint, url=url, attempts=attempts - 1
+                    )
+                    return
+
+                raise
 
             if response_data["data"] is None:
                 yield from []
@@ -182,11 +261,13 @@ class HttpClient:
             headers={"Authorization": f"Bearer {token}", "Content-Type": "application/json"},
         )
 
+        self.verify_response(raw_response)
+
         if raw_response.status_code == 204:
             return None
 
         if raw_response.status_code != 200:
-            raise AppStoreConnectError(raw_response.json())
+            raise AppStoreConnectError(raw_response)
 
         response_data = self.extract_data(raw_response)
 
@@ -231,6 +312,8 @@ class HttpClient:
             headers={"Authorization": f"Bearer {token}", "Content-Type": "application/json"},
         )
 
+        self.verify_response(raw_response)
+
         if raw_response.status_code == 201:
 
             if data_type is None:
@@ -243,7 +326,7 @@ class HttpClient:
         if raw_response.status_code >= 200 and raw_response.status_code < 300:
             return None
 
-        raise AppStoreConnectError(raw_response.json())
+        raise AppStoreConnectError(raw_response)
 
     def delete(
         self, *, endpoint: Optional[str] = None, url: Optional[str] = None
@@ -267,10 +350,14 @@ class HttpClient:
                 raise ValueError("Either `endpoint` or `url` must be set")
             url = self.generate_url(endpoint)
 
-        return requests.delete(
+        raw_response = requests.delete(
             url,
             headers={"Authorization": f"Bearer {token}", "Content-Type": "application/json"},
         )
+
+        self.verify_response(raw_response)
+
+        return raw_response
 
     def put_chunk(
         self, *, url: str, additional_headers: Dict[str, str], data: bytes
@@ -290,7 +377,11 @@ class HttpClient:
             **additional_headers,
         }
 
-        return requests.put(url=url, data=data, headers=headers)
+        raw_response = requests.put(url=url, data=data, headers=headers)
+
+        self.verify_response(raw_response)
+
+        return raw_response
 
     def extract_data(self, response: requests.Response) -> Any:
         """Validate a response from the API and extract the data
@@ -304,6 +395,6 @@ class HttpClient:
         _ = self
 
         if not response.ok:
-            raise AppStoreConnectError(response.json())
+            raise AppStoreConnectError(response)
 
         return response.json()

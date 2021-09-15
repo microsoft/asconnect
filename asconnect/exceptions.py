@@ -5,6 +5,8 @@
 
 from typing import Any
 
+import requests
+
 
 class AppStoreConnectError(Exception):
     """An error response from the API."""
@@ -15,14 +17,19 @@ class AppStoreConnectError(Exception):
     title: str
     detail: str
     source: Any
+    response: requests.Response
 
-    def __init__(self, data: Any):
+    def __init__(self, response: requests.Response):
         """Create a new instance.
 
-        :param data: The raw data from the response
+        :param response: The HTTP response
 
         :raises ValueError: If we can't decode the data
         """
+
+        self.response = response
+
+        data = response.json()
 
         if not isinstance(data, dict):
             raise ValueError(f"Could not decode App Store Connect error: {data}")
