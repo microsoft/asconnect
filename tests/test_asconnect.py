@@ -1104,3 +1104,18 @@ def set_idfa(client: asconnect.Client, version_id: str) -> None:
         honors_limited_ad_tracking=True,
         serves_ads=False,
     )
+
+
+def test_get_users() -> None:
+    """Test that we can upload all screenshots."""
+    key_id, key_contents, issuer_id = get_test_data()
+
+    client = asconnect.Client(
+        key_id=key_id,
+        key_contents=key_contents,
+        issuer_id=issuer_id,
+    )
+
+    users = list(client.users.get_users())
+
+    assert len(users) > 0

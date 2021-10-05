@@ -184,7 +184,11 @@ class HttpClient:
                 raise ValueError("Either `endpoint` or `url` must be set")
             url = self.generate_url(endpoint)
 
+        iterations = 0
+
         while True:
+            iterations += 1
+
             raw_response = requests.get(
                 url,
                 headers={"Authorization": f"Bearer {token}"},
@@ -224,6 +228,9 @@ class HttpClient:
 
             url = response_data["links"]["next"]
             assert url is not None
+
+        # This is only used for debugging, so we just assert so it isn't flagged as unused
+        assert iterations != 0
 
     def patch(
         self,

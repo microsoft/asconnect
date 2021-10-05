@@ -13,6 +13,7 @@ from asconnect.app_info_client import AppInfoClient
 from asconnect.beta_review_client import BetaReviewClient
 from asconnect.build_client import BuildClient
 from asconnect.screenshot_client import ScreenshotClient
+from asconnect.users_client import UsersClient
 from asconnect.version_client import VersionClient
 
 # pylint: disable=too-many-public-methods
@@ -29,6 +30,7 @@ class Client:
     beta_review: BetaReviewClient
     build: BuildClient
     screenshots: ScreenshotClient
+    users: UsersClient
     version: VersionClient
 
     def __init__(
@@ -59,4 +61,5 @@ class Client:
         self.beta_review = BetaReviewClient(http_client=self.http_client, log=self.log)
         self.build = BuildClient(http_client=self.http_client, log=self.log)
         self.screenshots = ScreenshotClient(http_client=self.http_client, log=self.log)
+        self.users = UsersClient(http_client=self.http_client, log=self.log)
         self.version = VersionClient(http_client=self.http_client, log=self.log)
