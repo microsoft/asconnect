@@ -43,7 +43,7 @@ class UsersClient:
 
         url = self.http_client.generate_url("users")
 
-        query_parameters = {"limit": 200}
+        query_parameters = {"limit": "200"}
 
         url = update_query_parameters(url, query_parameters)
 
