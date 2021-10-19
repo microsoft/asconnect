@@ -5,7 +5,7 @@ from typing import Dict, List, Optional
 
 import deserialize
 
-from asconnect.models.common import BaseAttributes, Links, Relationship, Reprable, Resource
+from asconnect.models.common import BaseAttributes, Links, Relationship, Resource
 
 
 class UserRole(enum.Enum):
