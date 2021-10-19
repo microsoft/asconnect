@@ -15,6 +15,24 @@ class Platform(enum.Enum):
     TVOS = "appletvos"
 
 
+def _check_should_restart(line: str) -> bool:
+    """Check if the line indicates that the upload should be re-run on failure.
+
+    :param line: The output line to check
+
+    :returns: True if it indicates a restart would help, False otherwise
+    """
+
+    for match in [
+        "Error: Server returned an invalid MIME type: text/plain",
+        "Error: The request timed out.",
+    ]:
+        if match in line:
+            return True
+
+    return False
+
+
 def upload(
     *,
     ipa_path: str,
@@ -74,7 +92,7 @@ def upload(
     should_restart = False
     for line in iter(upload_process.stdout.readline, ""):
         log.info(line.rstrip())
-        if "Error: Server returned an invalid MIME type: text/plain" in line:
+        if _check_should_restart(line):
             should_restart = True
         command_output += line
     upload_process.stdout.close()
