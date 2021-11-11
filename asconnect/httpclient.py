@@ -114,8 +114,11 @@ class HttpClient:
         # instead of generating a new one each time
         if self._cached_token_info is not None:
             cached_token, cached_expiration = self._cached_token_info
-            if cached_expiration - datetime.datetime.now() > datetime.timedelta(minutes=1):
+            # Only return a token with more than 10 minutes remaining on it
+            if cached_expiration - datetime.datetime.now() > datetime.timedelta(minutes=10):
                 return cached_token
+            else:
+                self._cached_token_info = None
 
         # Tokens more than 20 minutes in the future are invalid.
         expiration = datetime.datetime.now() + datetime.timedelta(minutes=20)
