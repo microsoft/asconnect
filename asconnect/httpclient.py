@@ -116,9 +116,10 @@ class HttpClient:
             cached_token, cached_expiration = self._cached_token_info
             # Only return a token with more than 10 minutes remaining on it
             if cached_expiration - datetime.datetime.now() > datetime.timedelta(minutes=10):
+                self.log.debug(f"Using cached token. Expiration time: {cached_expiration}")
                 return cached_token
-            else:
-                self._cached_token_info = None
+
+            self._cached_token_info = None
 
         # Tokens more than 20 minutes in the future are invalid.
         expiration = datetime.datetime.now() + datetime.timedelta(minutes=20)
@@ -135,6 +136,7 @@ class HttpClient:
             headers={"kid": self.key_id, "typ": "JWT"},
         ).decode("utf-8")
 
+        self.log.debug(f"Generating new token. Expiration: {expiration}")
         self._cached_token_info = (token, expiration)
 
         return token
