@@ -31,7 +31,7 @@ class HttpClient:
         key_id: str,
         key_contents: str,
         issuer_id: str,
-        log: Optional[logging.Logger] = None,
+        log: logging.Logger,
     ) -> None:
         """Construct a new client object.
 
@@ -45,11 +45,7 @@ class HttpClient:
         self._key_contents = key_contents
         self._issuer_id = issuer_id
         self._credentials_valid = False
-
-        if log is None:
-            self.log = logging.getLogger("asconnect")
-        else:
-            self.log = log.getChild("asconnect")
+        self.log = log.getChild("http")
 
         self._cached_token_info = None
 

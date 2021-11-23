@@ -49,12 +49,14 @@ class Client:
         :param log: Any base logger to be used (one will be created if not supplied)
         """
 
-        self.http_client = HttpClient(key_id=key_id, key_contents=key_contents, issuer_id=issuer_id)
-
         if log is None:
             self.log = logging.getLogger("asconnect")
         else:
             self.log = log.getChild("asconnect")
+
+        self.http_client = HttpClient(
+            key_id=key_id, key_contents=key_contents, issuer_id=issuer_id, log=self.log
+        )
 
         self.app = AppClient(http_client=self.http_client, log=self.log)
         self.app_info = AppInfoClient(http_client=self.http_client, log=self.log)
