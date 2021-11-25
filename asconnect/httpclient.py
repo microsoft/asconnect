@@ -13,6 +13,9 @@ import requests
 
 from asconnect.exceptions import AppStoreConnectError
 
+NEW_TOKEN_AGE_IN_MINUTES = 15
+MINIMUM_TOKEN_AGE = 5
+
 
 class HttpClient:
     """Base HTTP client for the ASC API."""
@@ -110,15 +113,17 @@ class HttpClient:
         # instead of generating a new one each time
         if self._cached_token_info is not None:
             cached_token, cached_expiration = self._cached_token_info
-            # Only return a token with more than 10 minutes remaining on it
-            if cached_expiration - datetime.datetime.now() > datetime.timedelta(minutes=10):
+            # Only return a token with time remaining on it
+            if cached_expiration - datetime.datetime.now() > datetime.timedelta(
+                minutes=MINIMUM_TOKEN_AGE
+            ):
                 self.log.debug(f"Using cached token. Expiration time: {cached_expiration}")
                 return cached_token
 
             self._cached_token_info = None
 
-        # Tokens more than 20 minutes in the future are invalid.
-        expiration = datetime.datetime.now() + datetime.timedelta(minutes=20)
+        # Tokens more than 20 minutes in the future are invalid, so our new one is less than that
+        expiration = datetime.datetime.now() + datetime.timedelta(minutes=NEW_TOKEN_AGE_IN_MINUTES)
 
         # Details at https://developer.apple.com/documentation/appstoreconnectapi/generating_tokens_for_api_requests
         token = jwt.encode(
