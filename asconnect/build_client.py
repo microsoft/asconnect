@@ -169,11 +169,12 @@ class BuildClient:
         url = build.relationships["buildBetaDetail"].links.related
         return next_or_none(self.http_client.get(url=url, data_type=BuildBetaDetail))
 
-    def upload(self, ipa_path: str, platform: Platform) -> None:
+    def upload(self, ipa_path: str, platform: Platform, max_attempts: int = 3) -> None:
         """Upload a build to App Store Connect.
 
         :param ipa_path: The path to the IPA
         :param platform: The platform the app is for
+        :param max_attempts: The number of attempts allowed
         """
 
         self.log.info(f"Uploading IPA {ipa_path} for platform {platform}")
@@ -187,6 +188,7 @@ class BuildClient:
                 key_id=self.http_client.key_id,
                 issuer_id=self.http_client.issuer_id,
                 log=self.log,
+                max_attempts=max_attempts
             )
 
         finally:
