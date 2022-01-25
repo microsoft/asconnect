@@ -74,7 +74,7 @@ def upload(
         key_id,
         "--apiIssuer",
         issuer_id,
-        "--verbose"
+        "--verbose",
     ]
 
     log.info(

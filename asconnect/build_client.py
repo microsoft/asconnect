@@ -188,7 +188,7 @@ class BuildClient:
                 key_id=self.http_client.key_id,
                 issuer_id=self.http_client.issuer_id,
                 log=self.log,
-                max_attempts=max_attempts
+                max_attempts=max_attempts,
             )
 
         finally:
