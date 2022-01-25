@@ -26,6 +26,7 @@ def _check_should_restart(line: str) -> bool:
     for match in [
         "Error: Server returned an invalid MIME type: text/plain",
         "Error: The request timed out.",
+        "status code 401, auth issue.",
     ]:
         if match in line:
             return True
