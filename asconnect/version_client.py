@@ -447,9 +447,9 @@ class VersionClient:
             },
                 data_type=None,
             )
-        except AppStoreConnectError:
-            if attempt < max_attempts:
-                self.log.info("Submit failed due to intermittent issue. Will sleep for 1 minute and try again.")
+        except AppStoreConnectError as ex:
+            if attempt < max_attempts and ex.response.status_code >= 500 and ex.response.status_code < 600:
+                self.log.info("Submit failed due to server-side intermittent issue. Will sleep for 1 minute and try again.")
                 time.sleep(60)
                 self.submit_for_review(version_id=version_id)
 
