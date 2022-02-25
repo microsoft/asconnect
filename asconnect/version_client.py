@@ -6,6 +6,7 @@
 import logging
 from typing import Iterator, List, Optional
 
+from asconnect.exceptions import AppStoreConnectError
 from asconnect.httpclient import HttpClient
 from asconnect.models import (
     AppStoreVersion,
@@ -421,23 +422,34 @@ class VersionClient:
         self,
         *,
         version_id: str,
+        attempt: int = 1,
+        max_attempts: int = 3,
     ) -> None:
         """Submit the version for review
 
         :param version_id: The ID of the version to submit for review
+        :param attempt: The attempt this is
+        :param max_attempts: The number of attempts allowed
         """
 
         self.log.info(f"Submitting version for review {version_id}")
 
-        self.http_client.post(
-            endpoint="appStoreVersionSubmissions",
-            data={
-                "data": {
+        try:
+            self.http_client.post(
+                endpoint="appStoreVersionSubmissions",
+                data={
+                    "data": {
                     "type": "appStoreVersionSubmissions",
                     "relationships": {
                         "appStoreVersion": {"data": {"type": "appStoreVersions", "id": version_id}}
                     },
                 }
             },
-            data_type=None,
-        )
+                data_type=None,
+            )
+        except AppStoreConnectError as ex:
+            if attempt < max_attempts and ex.response.status_code >= 500 and ex.response.status_code < 600:
+                self.log.info("Submit failed due to server-side intermittent issue. Will sleep for 1 minute and try again.")
+                time.sleep(60)
+                self.submit_for_review(version_id=version_id)
+
