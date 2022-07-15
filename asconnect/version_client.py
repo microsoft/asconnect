@@ -199,7 +199,7 @@ class VersionClient:
 
         :returns: An AppStoreVersion
         """
-        self.log.info("Getting localizations for version {version_id}...")
+        self.log.info(f"Getting localizations for version {version_id}...")
         url = self.http_client.generate_url(
             f"appStoreVersions/{version_id}/appStoreVersionLocalizations"
         )

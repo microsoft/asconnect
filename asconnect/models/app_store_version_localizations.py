@@ -18,12 +18,12 @@ class AppStoreVersionLocalization(Resource):
     class Attributes(BaseAttributes):
         """Attributes."""
 
-        description: str
-        keywords: str
+        description: Optional[str]
+        keywords: Optional[str]
         locale: str
         marketing_url: Optional[str]
         promotional_text: Optional[str]
-        support_url: str
+        support_url: Optional[str]
         whats_new: Optional[str]
 
     identifier: str
