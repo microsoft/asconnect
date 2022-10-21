@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "asconnect"
-version = "2.2.9"
+version = "2.2.10"
 description = "A wrapper around the Apple App Store Connect APIs"
 
 license = "MIT"
