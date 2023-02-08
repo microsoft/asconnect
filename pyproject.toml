@@ -30,7 +30,7 @@ classifiers = [
 
 [tool.poetry.dependencies]
 python = "^3.6.2"
-cryptography = "^3.0.0"
+cryptography = ">=3,<40"
 deserialize = "^1.2.0"
 pyjwt = ">=1.7,<3.0"
 requests = "^2.20.0"
