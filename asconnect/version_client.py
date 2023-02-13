@@ -4,6 +4,7 @@
 # Licensed under the MIT license.
 
 import logging
+import time
 from typing import Iterator, List, Optional
 
 from asconnect.exceptions import AppStoreConnectError
