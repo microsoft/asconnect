@@ -135,7 +135,10 @@ class HttpClient:
             self.key_contents,
             algorithm="ES256",
             headers={"kid": self.key_id, "typ": "JWT"},
-        ).decode("utf-8")
+        )
+        
+        if not isinstance(token, str):
+            token = token.decode("utf-8")
 
         self.log.debug(f"Generating new token. Expiration: {expiration}")
         self._cached_token_info = (token, expiration)
