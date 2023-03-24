@@ -26,7 +26,7 @@ def pytest_configure(config: _pytest.config.Config) -> None:  # type: ignore
     if not os.path.exists(env_file_path):
         return
 
-    with open(env_file_path) as env_file:
+    with open(env_file_path, "r", encoding="utf-8") as env_file:
         contents = env_file.read()
 
     for line in contents.split("\n"):

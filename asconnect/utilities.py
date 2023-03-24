@@ -5,8 +5,7 @@ import os
 from typing import Dict, Iterator, Optional, TypeVar
 import urllib.parse
 
-IteratorType = TypeVar("IteratorType")
-
+IteratorType = TypeVar("IteratorType")  # pylint: disable=invalid-name
 
 def next_or_none(iterator: Iterator[IteratorType]) -> Optional[IteratorType]:
     """Get the next value from an iterator, or return None when it is exhausted.
@@ -69,7 +68,7 @@ def write_key(key_id: str, key_contents: str) -> str:
     key_file_name = f"AuthKey_{key_id}.p8"
     key_file_path = os.path.join(folder_path, key_file_name)
 
-    with open(key_file_path, "w") as key_file:
+    with open(key_file_path, "w", encoding="utf-8") as key_file:
         key_file.write(key_contents)
 
     return key_file_path

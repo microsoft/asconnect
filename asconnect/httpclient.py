@@ -136,7 +136,7 @@ class HttpClient:
             algorithm="ES256",
             headers={"kid": self.key_id, "typ": "JWT"},
         )
-        
+
         if not isinstance(token, str):
             token = token.decode("utf-8")
 
