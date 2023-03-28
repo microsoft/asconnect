@@ -30,7 +30,7 @@ def get_test_data() -> Tuple[str, str, str]:
     """
     tests_path = os.path.dirname(os.path.abspath(__file__))
     test_data_path = os.path.join(tests_path, "test_data.json")
-    with open(test_data_path) as test_data_file:
+    with open(test_data_path, "r", encoding="utf-8") as test_data_file:
         all_test_data = json.load(test_data_file)
 
     test_data = all_test_data["base"]
@@ -876,7 +876,7 @@ def load_value(
 
     for path in paths_to_check:
         if os.path.exists(path):
-            with open(path) as metadata_file:
+            with open(path, "r", encoding="utf-8") as metadata_file:
                 value = metadata_file.read().strip()
 
             if value:

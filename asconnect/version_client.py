@@ -453,4 +453,3 @@ class VersionClient:
                 self.log.info("Submit failed due to server-side intermittent issue. Will sleep for 1 minute and try again.")
                 time.sleep(60)
                 self.submit_for_review(version_id=version_id)
-
