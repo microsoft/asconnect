@@ -215,7 +215,7 @@ class VersionClient:
         :returns: A Build
         """
         self.log.info(f"Getting build for version {version_id}...")
-        
+
         url = self.http_client.generate_url(f"appStoreVersions/{version_id}/build")
 
         return next_or_none(self.http_client.get(url=url, data_type=Build))
