@@ -17,6 +17,7 @@ from asconnect.models import (
     AppStoreVersionLocalization,
     AppStoreReviewDetails,
     IdfaDeclaration,
+    Build,
 )
 from asconnect.utilities import next_or_none, update_query_parameters
 
@@ -205,6 +206,19 @@ class VersionClient:
             f"appStoreVersions/{version_id}/appStoreVersionLocalizations"
         )
         yield from self.http_client.get(url=url, data_type=List[AppStoreVersionLocalization])
+
+    def get_attached_build(self, *, version_id: str) -> Optional[Build]:
+        """Get the build that is attached to a specific App Store version.
+
+        :param version_id: The version ID to get the build for
+
+        :returns: A Build
+        """
+        self.log.info(f"Getting build for version {version_id}...")
+        
+        url = self.http_client.generate_url(f"appStoreVersions/{version_id}/build")
+
+        return next_or_none(self.http_client.get(url=url, data_type=Build))
 
     def set_build(self, *, version_id: str, build_id: str) -> None:
         """Set the build for a version
