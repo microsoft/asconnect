@@ -82,6 +82,27 @@ def test_get_apps() -> None:
     print(apps[0])
 
 
+def test_get_attached_build() -> None:
+    """Test get attached build."""
+
+    key_id, key_contents, issuer_id = get_test_data()
+
+    client = asconnect.Client(
+        key_id=key_id,
+        key_contents=key_contents,
+        issuer_id=issuer_id,
+    )
+
+    app = client.app.get_from_bundle_id(APP_ID)
+    assert app is not None
+
+    version = client.version.get_version(app_id=app.identifier, version_string="1.2.3")
+    assert version is not None
+
+    build = client.version.get_attached_build(version_id=version.identifier)
+    assert build is not None
+
+
 def test_get_builds() -> None:
     """Test get apps."""
     key_id, key_contents, issuer_id = get_test_data()
