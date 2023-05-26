@@ -17,12 +17,15 @@ class ScreenshotDisplayType(enum.Enum):
     APP_IPHONE_47 = "APP_IPHONE_47"
     APP_IPHONE_40 = "APP_IPHONE_40"
     APP_IPHONE_35 = "APP_IPHONE_35"
+    APP_IPAD_PRO_6GEN_129 = "APP_IPAD_PRO_6GEN_129"
     APP_IPAD_PRO_3GEN_129 = "APP_IPAD_PRO_3GEN_129"
+    APP_IPAD_PRO_2GEN_129 = "APP_IPAD_PRO_2GEN_129"
     APP_IPAD_PRO_3GEN_11 = "APP_IPAD_PRO_3GEN_11"
     APP_IPAD_PRO_129 = "APP_IPAD_PRO_129"
     APP_IPAD_105 = "APP_IPAD_105"
     APP_IPAD_97 = "APP_IPAD_97"
     APP_DESKTOP = "APP_DESKTOP"
+    APP_WATCH_SERIES_7 = "APP_WATCH_SERIES_7"
     APP_WATCH_SERIES_4 = "APP_WATCH_SERIES_4"
     APP_WATCH_SERIES_3 = "APP_WATCH_SERIES_3"
     APP_APPLE_TV = "APP_APPLE_TV"
@@ -135,7 +138,7 @@ class AppScreenshot(Resource):
         asset_token: str
         asset_type: str
         file_name: str
-        file_size: int
+        file_size: Optional[int]
         image_asset: Optional[ImageAsset]
         source_file_checksum: Optional[str]
         uploaded: Optional[bool]
