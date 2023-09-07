@@ -7,7 +7,7 @@ import logging
 from typing import Any, Dict, Iterator, List, Optional
 
 from asconnect.httpclient import HttpClient
-from asconnect.models import App, AppStoreVersion, Platform
+from asconnect.models import App, AppStoreVersion, Platform, ReleaseType
 
 
 class AppClient:
@@ -66,6 +66,8 @@ class AppClient:
         platform: Platform = Platform.IOS,
         copyright_text: Optional[str] = None,
         uses_idfa: Optional[bool] = None,
+        release_type: ReleaseType = ReleaseType.MANUAL,
+        earliest_release_date: Optional[str] = None,
     ) -> AppStoreVersion:
         """Create a new version on the app store.
 
@@ -74,7 +76,10 @@ class AppClient:
         :param platform: The platform this app is (defaults to iOS)
         :param copyright_text: The copyright string to use
         :param uses_idfa: Set to True if this app uses the advertising ID, false otherwise
+        :param release_type: The release type to use (defaults to MANUAL)
+        :param earliest_release_date: The earliest date to release this app, required when release_type is SCHEDULED
 
+        :raises TypeError: If the release_type is SCHEDULED but earliest_release_date is not supplied
         :raises AppStoreConnectError: On a failure response
 
         :returns: An AppStoreVersion
@@ -85,8 +90,13 @@ class AppClient:
         attributes: Dict[str, Any] = {
             "platform": platform.value,
             "versionString": version,
-            "releaseType": "MANUAL",  # TODO This should support scheduling
+            "releaseType": release_type.value,
         }
+
+        if release_type == ReleaseType.SCHEDULED:
+            if not earliest_release_date:
+                raise TypeError("earliest_release_date must be supplied when release_type is SCHEDULED")
+            attributes["earliestReleaseDate"] = earliest_release_date
 
         if copyright_text:
             attributes["copyright"] = copyright_text
