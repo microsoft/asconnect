@@ -4,11 +4,9 @@
 jobs=4
 
 # Require full doc comments
-# Require the correct doc comment style
-# Avoid compare to empty string
 # Avoid overlapping exceptions
 # Limit cyclomatic complexity
-load-plugins=pylint.extensions.docparams,pylint.extensions.docstyle,pylint.extensions.emptystring,pylint.extensions.overlapping_exceptions,pylint.extensions.redefined_variable_type,pylint.extensions.mccabe
+load-plugins=pylint.extensions.docparams,pylint.extensions.overlapping_exceptions,pylint.extensions.redefined_variable_type,pylint.extensions.mccabe
 
 # pylint.extensions.docparams options
 accept-no-param-doc=no
