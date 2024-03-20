@@ -37,6 +37,7 @@ class BetaReviewClient:
         self.http_client = http_client
         self.log = log.getChild("beta_review")
 
+    # pylint:disable=too-many-arguments
     def set_beta_app_review_details(
         self,
         *,
@@ -86,13 +87,23 @@ class BetaReviewClient:
         if notes is not None:
             attributes["notes"] = notes
 
-        body = {"data": {"attributes": attributes, "id": app_id, "type": "betaAppReviewDetails"}}
+        body = {
+            "data": {
+                "attributes": attributes,
+                "id": app_id,
+                "type": "betaAppReviewDetails",
+            }
+        }
 
         self.log.debug(f"Beta review details: {body}")
 
         return self.http_client.patch(
-            endpoint=f"betaAppReviewDetails/{app_id}", data=body, data_type=BetaAppReviewDetail
+            endpoint=f"betaAppReviewDetails/{app_id}",
+            data=body,
+            data_type=BetaAppReviewDetail,
         )
+
+    # pylint:enable=too-many-arguments
 
     def get_beta_app_localizations(self, app_id: str) -> Iterator[BetaAppLocalization]:
         """Get the beta app localizations.

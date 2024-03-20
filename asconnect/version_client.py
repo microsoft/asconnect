@@ -255,6 +255,7 @@ class VersionClient:
             )
         )
 
+    # pylint:disable=too-many-arguments
     def set_app_review_details(
         self,
         *,
@@ -326,6 +327,8 @@ class VersionClient:
             },
             data_type=AppStoreReviewDetails,
         )
+
+    # pylint:enable=too-many-arguments
 
     def get_idfa(self, *, version_id: str) -> Optional[IdfaDeclaration]:
         """Get the advertising ID declaration.
@@ -454,16 +457,24 @@ class VersionClient:
                 endpoint="appStoreVersionSubmissions",
                 data={
                     "data": {
-                    "type": "appStoreVersionSubmissions",
-                    "relationships": {
-                        "appStoreVersion": {"data": {"type": "appStoreVersions", "id": version_id}}
-                    },
-                }
-            },
+                        "type": "appStoreVersionSubmissions",
+                        "relationships": {
+                            "appStoreVersion": {
+                                "data": {"type": "appStoreVersions", "id": version_id}
+                            }
+                        },
+                    }
+                },
                 data_type=None,
             )
         except AppStoreConnectError as ex:
-            if attempt < max_attempts and ex.response.status_code >= 500 and ex.response.status_code < 600:
-                self.log.info("Submit failed due to server-side intermittent issue. Will sleep for 1 minute and try again.")
+            if (
+                attempt < max_attempts
+                and ex.response.status_code >= 500
+                and ex.response.status_code < 600
+            ):
+                self.log.info(
+                    "Submit failed due to server-side intermittent issue. Will sleep for 1 minute and try again."
+                )
                 time.sleep(60)
                 self.submit_for_review(version_id=version_id)

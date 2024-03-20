@@ -95,7 +95,9 @@ class AppClient:
 
         if release_type == ReleaseType.SCHEDULED:
             if not earliest_release_date:
-                raise TypeError("earliest_release_date must be supplied when release_type is SCHEDULED")
+                raise TypeError(
+                    "earliest_release_date must be supplied when release_type is SCHEDULED"
+                )
             attributes["earliestReleaseDate"] = earliest_release_date
 
         if copyright_text:

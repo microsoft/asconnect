@@ -7,6 +7,7 @@ import urllib.parse
 
 IteratorType = TypeVar("IteratorType")  # pylint: disable=invalid-name
 
+
 def next_or_none(iterator: Iterator[IteratorType]) -> Optional[IteratorType]:
     """Get the next value from an iterator, or return None when it is exhausted.
 
