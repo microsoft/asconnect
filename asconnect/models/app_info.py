@@ -71,7 +71,7 @@ class AppInfo(Resource):
 
         app_store_age_rating: AppStoreAgeRating
         app_store_state: AppStoreVersionState
-        brazil_age_rating: BrazilAgeRating
+        brazil_age_rating: Optional[BrazilAgeRating]
         kids_age_band: Optional[KidsAgeBand]
 
     identifier: str
