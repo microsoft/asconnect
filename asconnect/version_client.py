@@ -447,6 +447,7 @@ class VersionClient:
         """Submit the version for review
 
         :param version_id: The ID of the version to submit for review
+        :param platform: The platform the app is for
         :param attempt: The attempt this is
         :param max_attempts: The number of attempts allowed
         """
