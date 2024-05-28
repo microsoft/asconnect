@@ -14,6 +14,7 @@ class Platform(enum.Enum):
     IOS = "IOS"
     MACOS = "MAC_OS"
     TVOS = "TV_OS"
+    VISIONOS = "VISION_OS"
 
 
 class ReleaseType(enum.Enum):
