@@ -11,4 +11,5 @@ from asconnect.models.builds import *
 from asconnect.models.idfa import *
 from asconnect.models.localization import *
 from asconnect.models.screenshots import *
+from asconnect.models.submission import *
 from asconnect.models.users import *
