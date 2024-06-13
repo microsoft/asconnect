@@ -5,19 +5,20 @@
 
 import logging
 import time
-from typing import Iterator, List, Optional
+from typing import cast, Iterator, List, Optional
 
 from asconnect.exceptions import AppStoreConnectError
 from asconnect.httpclient import HttpClient
 from asconnect.models import (
+    AppStoreReviewDetails,
     AppStoreVersion,
+    AppStoreVersionLocalization,
     AppStoreVersionPhasedRelease,
+    Build,
+    IdfaDeclaration,
     PhasedReleaseState,
     Platform,
-    AppStoreVersionLocalization,
-    AppStoreReviewDetails,
-    IdfaDeclaration,
-    Build,
+    ReviewSubmission,
 )
 from asconnect.utilities import next_or_none, update_query_parameters
 
@@ -455,7 +456,7 @@ class VersionClient:
         self.log.info(f"Submitting version for review {version_id}, platform: {platform}")
 
         try:
-            self.http_client.post(
+            response = self.http_client.post(
                 endpoint="reviewSubmissions",
                 data={
                     "data": {
@@ -470,8 +471,12 @@ class VersionClient:
                         },
                     }
                 },
-                data_type=None,
+                data_type=ReviewSubmission,
             )
+            if response is not None:
+                response = cast(ReviewSubmission, response)
+                self.log.info(f"Did submit {response.identifier} for review, state: {response.attributes.state}")
+
         except AppStoreConnectError as ex:
             if (
                 attempt < max_attempts
