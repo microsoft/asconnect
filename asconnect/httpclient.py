@@ -163,12 +163,20 @@ class HttpClient:
         if response.status_code >= 200 and response.status_code < 300:
             self._credentials_valid = True
 
+    def log_response(self, response: requests.Response) -> None:
+        """Log the respose
+
+        :param response: The response to log
+        """
+        self.log.debug(f"Response: {response.status_code}, {response.text}")
+
     def get(
         self,
         *,
         data_type: Type,
         endpoint: Optional[str] = None,
         url: Optional[str] = None,
+        log_response: bool = False,
         attempts: int = 3,
     ) -> Iterator[Any]:
         """Perform a GET to the endpoint specified.
@@ -179,6 +187,7 @@ class HttpClient:
         :param Type data_type: The class to deserialize the data of the response to
         :param Optional[str] endpoint: The endpoint to perform the GET on
         :param Optional[str] url: The full URL to perform the GET on
+        :param log_response: A flag indicates whether to log the response
         :param int attempts: Number of attempts remaining to try this call
 
         :raises ValueError: If neither url or endpoint are specified
@@ -203,6 +212,9 @@ class HttpClient:
                 headers={"Authorization": f"Bearer {token}"},
             )
 
+            if log_response:
+                self.log_response(raw_response)
+
             self.verify_response(raw_response)
 
             try:
@@ -213,7 +225,11 @@ class HttpClient:
                     or (ex.response.status_code == 401 and self._credentials_valid)
                 ):
                     yield from self.get(
-                        data_type=data_type, endpoint=endpoint, url=url, attempts=attempts - 1
+                        data_type=data_type,
+                        endpoint=endpoint,
+                        url=url,
+                        log_response=log_response,
+                        attempts=attempts - 1,
                     )
                     return
 
@@ -244,10 +260,11 @@ class HttpClient:
     def patch(
         self,
         *,
-        data_type: Optional[Type],
+        data_type: Optional[Type] = None,
         endpoint: Optional[str] = None,
         url: Optional[str] = None,
         data: Any,
+        log_response: bool = False,
     ) -> Any:
         """Perform a PATCH to the endpoint specified.
 
@@ -258,6 +275,7 @@ class HttpClient:
         :param Optional[str] endpoint: The endpoint to perform the GET on
         :param Optional[str] url: The full URL to perform the GET on
         :param Any data: Some JSON serializable data to send
+        :param log_response: A flag indicates whether to log the response
 
         :raises AppStoreConnectError: If we don't get a 200 response back
         :raises ValueError: If neither url or endpoint are specified
@@ -276,6 +294,9 @@ class HttpClient:
             json=data,
             headers={"Authorization": f"Bearer {token}", "Content-Type": "application/json"},
         )
+
+        if log_response:
+            self.log_response(raw_response)
 
         self.verify_response(raw_response)
 
@@ -299,6 +320,7 @@ class HttpClient:
         url: Optional[str] = None,
         data: Any,
         data_type: Optional[Type] = None,
+        log_response: bool = False,
     ) -> Any:
         """Perform a POST to the endpoint specified.
 
@@ -309,6 +331,7 @@ class HttpClient:
         :param Optional[str] url: The full URL to perform the GET on
         :param Any data: Some JSON serializable data to send
         :param Optional[Type] data_type: The data type to deserialize the response to
+        :param log_response: A flag indicates whether to log the response
 
         :raises ValueError: If neither url or endpoint are specified
         :raises AppStoreConnectError: If we get a failure response back from the API
@@ -328,6 +351,9 @@ class HttpClient:
             headers={"Authorization": f"Bearer {token}", "Content-Type": "application/json"},
         )
 
+        if log_response:
+            self.log_response(raw_response)
+
         self.verify_response(raw_response)
 
         if raw_response.status_code == 201:
@@ -345,7 +371,11 @@ class HttpClient:
         raise AppStoreConnectError(raw_response)
 
     def delete(
-        self, *, endpoint: Optional[str] = None, url: Optional[str] = None
+        self,
+        *,
+        endpoint: Optional[str] = None,
+        url: Optional[str] = None,
+        log_response: bool = False,
     ) -> requests.Response:
         """Perform a DELETE to the endpoint specified.
 
@@ -354,6 +384,7 @@ class HttpClient:
 
         :param Optional[str] endpoint: The endpoint to perform the GET on
         :param Optional[str] url: The full URL to perform the GET on
+        :param log_response: A flag indicates whether to log the response
 
         :raises ValueError: If neither url or endpoint are specified
 
@@ -371,18 +402,27 @@ class HttpClient:
             headers={"Authorization": f"Bearer {token}", "Content-Type": "application/json"},
         )
 
+        if log_response:
+            self.log_response(raw_response)
+
         self.verify_response(raw_response)
 
         return raw_response
 
     def put_chunk(
-        self, *, url: str, additional_headers: Dict[str, str], data: bytes
+        self,
+        *,
+        url: str,
+        additional_headers: Dict[str, str],
+        data: bytes,
+        log_response: bool = False,
     ) -> requests.Response:
         """Perform a PUT to the url specified
 
         :param str url: The full URL to perform the PUT on
         :param Dict[str,str] additional_headers: The additional headers to add
         :param bytes data: The raw data to upload
+        :param log_response: A flag indicates whether to log the response
 
         :returns: The raw response
         """
@@ -394,6 +434,9 @@ class HttpClient:
         }
 
         raw_response = requests.put(url=url, data=data, headers=headers)
+
+        if log_response:
+            self.log_response(raw_response)
 
         self.verify_response(raw_response)
 
