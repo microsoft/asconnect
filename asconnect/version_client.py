@@ -5,7 +5,7 @@
 
 import logging
 import time
-from typing import cast, Iterator, List, Optional
+from typing import Iterator, List, Optional
 
 from asconnect.exceptions import AppStoreConnectError
 from asconnect.httpclient import HttpClient
@@ -442,49 +442,55 @@ class VersionClient:
         *,
         version_id: str,
         platform: Platform = Platform.IOS,
-        attempt: int = 1,
         max_attempts: int = 3,
     ) -> None:
         """Submit the version for review
 
         :param version_id: The ID of the version to submit for review
         :param platform: The platform the app is for
-        :param attempt: The attempt this is
         :param max_attempts: The number of attempts allowed
         """
 
-        self.log.info(f"Submitting version for review {version_id}, platform: {platform}")
-
         try:
-            response = self.http_client.post(
+            self.log.info(f"Creating review submisson for {version_id}, platform: {platform}")
+
+            submission: ReviewSubmission = self.http_client.post(
                 endpoint="reviewSubmissions",
                 data={
                     "data": {
                         "type": "reviewSubmissions",
-                        "attributes": {
-                            "platform": platform.value
-                        },
-                        "relationships": {
-                            "app": {
-                                "data": {"type": "apps", "id": version_id}
-                            }
-                        },
+                        "attributes": {"platform": platform.value},
+                        "relationships": {"app": {"data": {"type": "apps", "id": version_id}}},
                     }
                 },
                 data_type=ReviewSubmission,
+                log_response=True,
             )
-            if response is not None:
-                response = cast(ReviewSubmission, response)
-                self.log.info(f"Did submit {response.identifier} for review, state: {response.attributes.state}")
+
+            self.log.info(
+                f"Did create review submission {submission.identifier}, state: {submission.attributes.state}, modifying to submitted"
+            )
+
+            self.http_client.patch(
+                endpoint=f"reviewSubmissions/{submission.identifier}",
+                data={
+                    "data": {
+                        "type": "reviewSubmissions",
+                        "id": submission.identifier,
+                        "attributes": {"submitted": True},
+                    }
+                },
+                log_response=True,
+            )
 
         except AppStoreConnectError as ex:
             if (
-                attempt < max_attempts
+                max_attempts > 0
                 and ex.response.status_code >= 500
                 and ex.response.status_code < 600
             ):
                 self.log.info(
-                    "Submit failed due to server-side intermittent issue. Will sleep for 1 minute and try again."
+                    f"Submit failed due to server-side intermittent issue. Will sleep for 1 minute and try again, left attempt: {max_attempts - 1}."
                 )
                 time.sleep(60)
-                self.submit_for_review(version_id=version_id)
+                self.submit_for_review(version_id=version_id, max_attempts=max_attempts - 1)
