@@ -440,19 +440,21 @@ class VersionClient:
     def submit_for_review(
         self,
         *,
-        version_id: str,
+        app_id: str,
         platform: Platform = Platform.IOS,
         max_attempts: int = 3,
     ) -> None:
         """Submit the version for review
 
-        :param version_id: The ID of the version to submit for review
+        :param app_id: The ID of the app to submit for review
         :param platform: The platform the app is for
         :param max_attempts: The number of attempts allowed
+
+        :raises AppStoreConnectError: If runs into unretriable error or exceeds retry count
         """
 
         try:
-            self.log.info(f"Creating review submisson for {version_id}, platform: {platform}")
+            self.log.info(f"Creating review submisson for {app_id}, platform: {platform}")
 
             submission: ReviewSubmission = self.http_client.post(
                 endpoint="reviewSubmissions",
@@ -460,7 +462,7 @@ class VersionClient:
                     "data": {
                         "type": "reviewSubmissions",
                         "attributes": {"platform": platform.value},
-                        "relationships": {"app": {"data": {"type": "apps", "id": version_id}}},
+                        "relationships": {"app": {"data": {"type": "apps", "id": app_id}}},
                     }
                 },
                 data_type=ReviewSubmission,
@@ -493,4 +495,6 @@ class VersionClient:
                     f"Submit failed due to server-side intermittent issue. Will sleep for 1 minute and try again, left attempt: {max_attempts - 1}."
                 )
                 time.sleep(60)
-                self.submit_for_review(version_id=version_id, max_attempts=max_attempts - 1)
+                self.submit_for_review(app_id=app_id, max_attempts=max_attempts - 1)
+            else:
+                raise # Re-raise the caught exception
