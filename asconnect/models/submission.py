@@ -9,13 +9,11 @@ from asconnect.models.common import BaseAttributes, Resource, Links
 class ReviewSubmission(Resource):
     """Represents an app store review details."""
 
-    @deserialize.key("submitted_date", "submittedDate")
     class Attributes(BaseAttributes):
         """Attributes."""
 
         platform: str
         state: str
-        submitted_date: str
 
     identifier: str
     attributes: Attributes
