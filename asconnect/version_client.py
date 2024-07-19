@@ -18,7 +18,6 @@ from asconnect.models import (
     IdfaDeclaration,
     PhasedReleaseState,
     Platform,
-    ReviewSubmission,
 )
 from asconnect.utilities import next_or_none, update_query_parameters
 
@@ -440,46 +439,30 @@ class VersionClient:
     def submit_for_review(
         self,
         *,
-        app_id: str,
-        platform: Platform = Platform.IOS,
+        version_id: str,
         max_attempts: int = 3,
     ) -> None:
         """Submit the version for review
 
-        :param app_id: The ID of the app to submit for review
-        :param platform: The platform the app is for
+        :param version_id: The ID of the version to submit for review
         :param max_attempts: The number of attempts allowed
 
         :raises AppStoreConnectError: If runs into unretriable error or exceeds retry count
         """
 
         try:
-            self.log.info(f"Creating review submisson for {app_id}, platform: {platform}")
+            self.log.info(f"Submitting version for review {version_id}")
 
-            submission: ReviewSubmission = self.http_client.post(
-                endpoint="reviewSubmissions",
+            self.http_client.post(
+                endpoint="appStoreVersionSubmissions",
                 data={
                     "data": {
-                        "type": "reviewSubmissions",
-                        "attributes": {"platform": platform.value},
-                        "relationships": {"app": {"data": {"type": "apps", "id": app_id}}},
-                    }
-                },
-                data_type=ReviewSubmission,
-                log_response=True,
-            )
-
-            self.log.info(
-                f"Did create review submission {submission.identifier}, state: {submission.attributes.state}, modifying to submitted"
-            )
-
-            self.http_client.patch(
-                endpoint=f"reviewSubmissions/{submission.identifier}",
-                data={
-                    "data": {
-                        "type": "reviewSubmissions",
-                        "id": submission.identifier,
-                        "attributes": {"submitted": True},
+                        "type": "appStoreVersionSubmissions",
+                        "relationships": {
+                            "appStoreVersion": {
+                                "data": {"type": "appStoreVersions", "id": version_id}
+                            }
+                        },
                     }
                 },
                 log_response=True,
@@ -495,6 +478,6 @@ class VersionClient:
                     f"Submit failed due to server-side intermittent issue. Will sleep for 1 minute and try again, left attempt: {max_attempts - 1}."
                 )
                 time.sleep(60)
-                self.submit_for_review(app_id=app_id, max_attempts=max_attempts - 1)
+                self.submit_for_review(version_id=version_id, max_attempts=max_attempts - 1)
             else:
-                raise # Re-raise the caught exception
+                raise  # Re-raise the caught exception
