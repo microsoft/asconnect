@@ -32,7 +32,7 @@ classifiers = [
 
 [tool.poetry.dependencies]
 python = "^3.8"
-cryptography = ">=40,<43"
+cryptography = ">=40,<44"
 deserialize = "^2.0.1"
 pyjwt = "^2.6.0"
 requests = "^2.28.2"
