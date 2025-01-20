@@ -200,17 +200,20 @@ class ScreenshotClient:
         )
 
     def _upload_screenshot_contents(
-        self, *, file_path: str, upload_operations: List[UploadOperation]
+        self, *, file_path: str, upload_operations: List[UploadOperation], use_auth_header: bool
     ) -> None:
         """Upload a screenshots contents
 
         :param file_path: The path to the screenshot to upload
         :param upload_operations: The upload operations for the screenshot
+        :param use_auth_header: If this is true, an auth header will be included in the upload request
 
         :raises AppStoreConnectError: On error when creating the set
         """
 
-        self.log.debug(f"Uploading screenshot contents {file_path}: {upload_operations}")
+        self.log.debug(
+            f"Uploading screenshot contents {file_path}: {upload_operations}, use auth header: {use_auth_header}"
+        )
 
         # Start by ordering the upload oeprations by offset (so we can just go in order)
         upload_operations = sorted(upload_operations, key=lambda operation: operation.offset)
@@ -220,7 +223,11 @@ class ScreenshotClient:
                 data = screenshot.read(operation.length)
                 headers = {header.name: header.value for header in operation.request_headers}
                 raw_response = self.http_client.put_chunk(
-                    url=operation.url, additional_headers=headers, data=data
+                    url=operation.url,
+                    additional_headers=headers,
+                    data=data,
+                    use_auth_header=use_auth_header,
+                    log_response=True,
                 )
                 # TODO Check this
                 assert raw_response.ok
@@ -250,11 +257,14 @@ class ScreenshotClient:
             data_type=AppScreenshot,
         )
 
-    def upload_screenshot(self, *, file_path: str, screenshot_set_id: str) -> AppScreenshot:
+    def upload_screenshot(
+        self, *, file_path: str, screenshot_set_id: str, use_auth_header: bool = True
+    ) -> AppScreenshot:
         """Upload a screenshot
 
         :param file_path: The path to the screenshot to upload
         :param screenshot_set_id: The id for the screenshot set to upload to
+        :param use_auth_header: If this is true, an auth header will be included in the upload request
 
         :return: The screenshot
         """
@@ -270,7 +280,9 @@ class ScreenshotClient:
         assert screenshot.attributes.upload_operations is not None
 
         self._upload_screenshot_contents(
-            file_path=file_path, upload_operations=screenshot.attributes.upload_operations
+            file_path=file_path,
+            upload_operations=screenshot.attributes.upload_operations,
+            use_auth_header=use_auth_header,
         )
 
         return self._set_screenshot_uploaded(screenshot=screenshot, file_hash=checksum)

@@ -415,6 +415,7 @@ class HttpClient:
         url: str,
         additional_headers: Dict[str, str],
         data: bytes,
+        use_auth_header: bool = True,
         log_response: bool = False,
     ) -> requests.Response:
         """Perform a PUT to the url specified
@@ -422,16 +423,20 @@ class HttpClient:
         :param str url: The full URL to perform the PUT on
         :param Dict[str,str] additional_headers: The additional headers to add
         :param bytes data: The raw data to upload
+        :param use_auth_header: A flag indicates whether an auth header will be included in the request
         :param log_response: A flag indicates whether to log the response
 
         :returns: The raw response
         """
         token = self.generate_token()
 
-        headers = {
-            **{"Authorization": f"Bearer {token}", "Content-Type": "application/json"},
-            **additional_headers,
-        }
+        if use_auth_header:
+            headers = {
+                **{"Authorization": f"Bearer {token}", "Content-Type": "application/json"},
+                **additional_headers,
+            }
+        else:
+            headers = additional_headers
 
         raw_response = requests.put(url=url, data=data, headers=headers)
 
