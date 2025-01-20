@@ -430,13 +430,13 @@ class HttpClient:
         """
         token = self.generate_token()
 
-        if use_auth_header:
-            headers = {
-                **{"Authorization": f"Bearer {token}", "Content-Type": "application/json"},
-                **additional_headers,
-            }
-        else:
-            headers = additional_headers
+        headers = additional_headers
+
+        if use_auth_header and ("Authorization" not in headers):
+            headers["Authorization"] = f"Bearer {token}"
+
+        if "Content-Type" not in headers:
+            headers["Content-Type"] = "application/json"
 
         raw_response = requests.put(url=url, data=data, headers=headers)
 
