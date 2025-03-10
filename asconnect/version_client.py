@@ -478,6 +478,54 @@ class VersionClient:
                     f"Submit failed due to server-side intermittent issue. Will sleep for 1 minute and try again, left attempt: {max_attempts - 1}."
                 )
                 time.sleep(60)
-                self.submit_for_review(version_id=version_id, max_attempts=max_attempts - 1)
+                self.submit_for_review(
+                    version_id=version_id, max_attempts=max_attempts - 1
+                )
+            else:
+                raise  # Re-raise the caught exception
+
+    def release(
+        self,
+        *,
+        version_id: str,
+        max_attempts: int = 3,
+    ) -> None:
+        """Release an approved version
+
+        :param version_id: The ID of the version to release
+        :param max_attempts: The number of attempts allowed
+
+        :raises AppStoreConnectError: If runs into unretriable error or exceeds retry count
+        """
+
+        try:
+            self.log.info(f"Releasing version {version_id}")
+
+            self.http_client.post(
+                endpoint="appStoreVersionReleaseRequests",
+                data={
+                    "data": {
+                        "type": "appStoreVersionReleaseRequests",
+                        "relationships": {
+                            "appStoreVersion": {
+                                "data": {"type": "appStoreVersions", "id": version_id}
+                            }
+                        },
+                    }
+                },
+                log_response=True,
+            )
+
+        except AppStoreConnectError as ex:
+            if (
+                max_attempts > 0
+                and ex.response.status_code >= 500
+                and ex.response.status_code < 600
+            ):
+                self.log.info(
+                    f"Submit failed due to server-side intermittent issue. Will sleep for 1 minute and try again, left attempt: {max_attempts - 1}."
+                )
+                time.sleep(60)
+                self.release(version_id=version_id, max_attempts=max_attempts - 1)
             else:
                 raise  # Re-raise the caught exception
