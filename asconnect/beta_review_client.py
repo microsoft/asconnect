@@ -4,7 +4,7 @@
 # Licensed under the MIT license.
 
 import logging
-from typing import Any, Dict, Iterator, List, Optional
+from typing import Any, Iterator
 
 from asconnect.httpclient import HttpClient
 
@@ -46,29 +46,29 @@ class BetaReviewClient:
         contact_first_name: str,
         contact_last_name: str,
         contact_phone: str,
-        demo_account_name: Optional[str] = None,
-        demo_account_password: Optional[str] = None,
-        demo_account_required: Optional[bool] = None,
-        notes: Optional[str] = None,
+        demo_account_name: str | None = None,
+        demo_account_password: str | None = None,
+        demo_account_required: bool | None = None,
+        notes: str | None = None,
     ) -> BetaAppReviewDetail:
         """Set the Beta app review details.
 
-        :param str app_id: The Apple ID for the app
-        :param str contact_email: The email for the app review contact
-        :param str contact_first_name: The first name for the app review contact
-        :param str contact_last_name: The last name for the app review contact
-        :param str contact_phone: The phone number for the app review contact
-        :param Optional[str] demo_account_name: The username for the demo account
-        :param Optional[str] demo_account_password: The password for the demo account
-        :param Optional[bool] demo_account_required: Set to True to mark the demo account as required
-        :param Optional[str] notes: Any notes for the reviewer
+        :param app_id: The Apple ID for the app
+        :param contact_email: The email for the app review contact
+        :param contact_first_name: The first name for the app review contact
+        :param contact_last_name: The last name for the app review contact
+        :param contact_phone: The phone number for the app review contact
+        :param demo_account_name: The username for the demo account
+        :param demo_account_password: The password for the demo account
+        :param demo_account_required: Set to True to mark the demo account as required
+        :param notes: Any notes for the reviewer
 
         :returns: The raw response
         """
 
         self.log.info(f"Setting beta app review details on {app_id}")
 
-        attributes: Dict[str, Any] = {
+        attributes: dict[str, Any] = {
             "contactEmail": contact_email,
             "contactFirstName": contact_first_name,
             "contactLastName": contact_last_name,
@@ -114,7 +114,7 @@ class BetaReviewClient:
         """
         self.log.debug(f"Getting beta app localizations for {app_id}")
         url = self.http_client.generate_url(f"apps/{app_id}/betaAppLocalizations")
-        yield from self.http_client.get(url=url, data_type=List[BetaAppLocalization])
+        yield from self.http_client.get(url=url, data_type=list[BetaAppLocalization])
 
     def get_beta_build_localizations(self, build_id: str) -> Iterator[BetaBuildLocalization]:
         """Get the beta app localizations.
@@ -125,10 +125,10 @@ class BetaReviewClient:
         """
         self.log.debug(f"Getting beta build localizations for {build_id}")
         url = self.http_client.generate_url(f"betaBuildLocalizations?filter[build]={build_id}")
-        yield from self.http_client.get(url=url, data_type=List[BetaBuildLocalization])
+        yield from self.http_client.get(url=url, data_type=list[BetaBuildLocalization])
 
     def set_beta_app_localizations(
-        self, app_id: str, localizations: Dict[str, Dict[str, str]]
+        self, app_id: str, localizations: dict[str, dict[str, str]]
     ) -> None:
         """Set the app localizations.
 
@@ -181,7 +181,7 @@ class BetaReviewClient:
                     },
                 )
 
-    def set_whats_new_for_build(self, build_id: str, localizations: Dict[str, str]) -> None:
+    def set_whats_new_for_build(self, build_id: str, localizations: dict[str, str]) -> None:
         """Set the whats new for a build.
 
         :param build_id: The apple identifier for the app to set the localizations for
@@ -245,9 +245,9 @@ class BetaReviewClient:
         """
         self.log.debug(f"Getting beta groups for {app_id}")
         url = self.http_client.generate_url(f"betaGroups?filter[app]={app_id}")
-        yield from self.http_client.get(url=url, data_type=List[BetaGroup])
+        yield from self.http_client.get(url=url, data_type=list[BetaGroup])
 
-    def set_beta_groups_on_build(self, build_id: str, beta_groups: List[BetaGroup]) -> None:
+    def set_beta_groups_on_build(self, build_id: str, beta_groups: list[BetaGroup]) -> None:
         """Set the Beta groups on a build.
 
         :param build_id: The build ID for the build to set the groups on

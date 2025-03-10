@@ -4,7 +4,7 @@
 # Licensed under the MIT license.
 
 import logging
-from typing import Iterator, List, Optional
+from typing import Iterator
 
 from asconnect.httpclient import HttpClient
 from asconnect.models import AppInfoLocalization, AppInfo, AppStoreVersionLocalization
@@ -32,7 +32,7 @@ class AppInfoClient:
         self.http_client = http_client
         self.log = log.getChild("appinfo")
 
-    def get_app_info(self, *, app_id: str) -> List[AppInfo]:
+    def get_app_info(self, *, app_id: str) -> list[AppInfo]:
         """Get the app info for an app.
 
         If there are two, one will be marked as ready for sale, the other will
@@ -45,13 +45,13 @@ class AppInfoClient:
         self.log.debug(f"Getting app info for {app_id}")
         url = self.http_client.generate_url(f"apps/{app_id}/appInfos")
 
-        return list(self.http_client.get(url=url, data_type=List[AppInfo]))
+        return list(self.http_client.get(url=url, data_type=list[AppInfo]))
 
     def get_localizations(
         self,
         *,
         app_info_id: str,
-        locale: Optional[str] = None,
+        locale: str | None = None,
     ) -> Iterator[AppInfoLocalization]:
         """Get the app info for an app.
 
@@ -71,16 +71,16 @@ class AppInfoClient:
 
         url = update_query_parameters(url, query_parameters)
 
-        yield from self.http_client.get(url=url, data_type=List[AppInfoLocalization])
+        yield from self.http_client.get(url=url, data_type=list[AppInfoLocalization])
 
     def set_localization_properties(
         self,
         *,
         localization_id: str,
-        name: Optional[str] = None,
-        privacy_policy_text: Optional[str] = None,
-        privacy_policy_url: Optional[str] = None,
-        subtitle: Optional[str] = None,
+        name: str | None = None,
+        privacy_policy_text: str | None = None,
+        privacy_policy_url: str | None = None,
+        subtitle: str | None = None,
     ) -> AppInfoLocalization:
         """Set the properties on an app info localization
 
@@ -131,12 +131,12 @@ class AppInfoClient:
         self,
         *,
         version_localization_id: str,
-        description: Optional[str] = None,
-        keywords: Optional[str] = None,
-        marketing_url: Optional[str] = None,
-        promotional_text: Optional[str] = None,
-        support_url: Optional[str] = None,
-        whats_new: Optional[str] = None,
+        description: str | None = None,
+        keywords: str | None = None,
+        marketing_url: str | None = None,
+        promotional_text: str | None = None,
+        support_url: str | None = None,
+        whats_new: str | None = None,
     ) -> AppInfoLocalization:
         """Set the properties on an app version localization
 

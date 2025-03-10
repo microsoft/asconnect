@@ -1,7 +1,5 @@
 """Build Models for the API"""
 
-from typing import Dict, Optional
-
 import deserialize
 
 from asconnect.models.common import BaseAttributes, Links, Relationship, Reprable, Resource
@@ -30,9 +28,9 @@ class BuildAttributes(BaseAttributes):
     expiration_date: str
     expired: bool
     min_os_version: str
-    icon_asset_token: Optional[IconAssetToken]
+    icon_asset_token: IconAssetToken | None
     processing_state: str
-    uses_non_exempt_encryption: Optional[bool]
+    uses_non_exempt_encryption: bool | None
 
 
 @deserialize.key("identifier", "id")
@@ -41,5 +39,5 @@ class Build(Resource):
 
     identifier: str
     attributes: BuildAttributes
-    relationships: Optional[Dict[str, Relationship]]
+    relationships: dict[str, Relationship] | None
     links: Links

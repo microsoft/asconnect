@@ -5,7 +5,7 @@
 
 import logging
 import time
-from typing import Iterator, List, Optional
+from typing import Iterator
 
 from asconnect.exceptions import AppStoreConnectError
 from asconnect.httpclient import HttpClient
@@ -47,7 +47,7 @@ class VersionClient:
         self,
         *,
         version_id: str,
-    ) -> Optional[AppStoreVersion]:
+    ) -> AppStoreVersion | None:
         """Get the version with the given ID
 
         :param version_id: The version ID to get
@@ -63,8 +63,8 @@ class VersionClient:
         self,
         *,
         app_id: str,
-        version_string: Optional[str] = None,
-        platform: Optional[Platform] = None,
+        version_string: str | None = None,
+        platform: Platform | None = None,
     ) -> Iterator[AppStoreVersion]:
         """Get the versions for an app.
 
@@ -90,9 +90,9 @@ class VersionClient:
 
         url = update_query_parameters(url, query_parameters)
 
-        yield from self.http_client.get(url=url, data_type=List[AppStoreVersion])
+        yield from self.http_client.get(url=url, data_type=list[AppStoreVersion])
 
-    def get_version(self, *, app_id: str, version_string: str) -> Optional[AppStoreVersion]:
+    def get_version(self, *, app_id: str, version_string: str) -> AppStoreVersion | None:
         """Get the versions for an app.
 
         :param app_id: The app ID to get the version for
@@ -107,7 +107,7 @@ class VersionClient:
         self,
         *,
         version_id: str,
-    ) -> Optional[AppStoreVersionPhasedRelease]:
+    ) -> AppStoreVersionPhasedRelease | None:
         """Get the phased release of given app version
 
         :param version_id: The version ID to query for phased releases
@@ -126,7 +126,7 @@ class VersionClient:
         *,
         version_id: str,
         phased_release_state: PhasedReleaseState = PhasedReleaseState.INACTIVE,
-    ) -> Optional[AppStoreVersionPhasedRelease]:
+    ) -> AppStoreVersionPhasedRelease | None:
         """Create a phased release for a given app version, defaulting to creating an inactive release.
 
         :param version_id: The version ID to query for phased releases
@@ -170,7 +170,7 @@ class VersionClient:
         *,
         phased_release_id: str,
         phased_release_state: PhasedReleaseState = PhasedReleaseState.INACTIVE,
-    ) -> Optional[AppStoreVersionPhasedRelease]:
+    ) -> AppStoreVersionPhasedRelease | None:
         """Update a Phased Release
 
         :param phased_release_id: The ID of the release set to modify
@@ -205,9 +205,9 @@ class VersionClient:
         url = self.http_client.generate_url(
             f"appStoreVersions/{version_id}/appStoreVersionLocalizations"
         )
-        yield from self.http_client.get(url=url, data_type=List[AppStoreVersionLocalization])
+        yield from self.http_client.get(url=url, data_type=list[AppStoreVersionLocalization])
 
-    def get_attached_build(self, *, version_id: str) -> Optional[Build]:
+    def get_attached_build(self, *, version_id: str) -> Build | None:
         """Get the build that is attached to a specific App Store version.
 
         :param version_id: The version ID to get the build for
@@ -240,7 +240,7 @@ class VersionClient:
             data_type=None,
         )
 
-    def get_app_review_details(self, *, version_id: str) -> Optional[AppStoreReviewDetails]:
+    def get_app_review_details(self, *, version_id: str) -> AppStoreReviewDetails | None:
         """Get the app review details for the version.
 
         :param version_id: The version ID to get the app review details for
@@ -330,7 +330,7 @@ class VersionClient:
 
     # pylint:enable=too-many-arguments
 
-    def get_idfa(self, *, version_id: str) -> Optional[IdfaDeclaration]:
+    def get_idfa(self, *, version_id: str) -> IdfaDeclaration | None:
         """Get the advertising ID declaration.
 
         :param version_id: The version to get the declaration for
@@ -478,9 +478,7 @@ class VersionClient:
                     f"Submit failed due to server-side intermittent issue. Will sleep for 1 minute and try again, left attempt: {max_attempts - 1}."
                 )
                 time.sleep(60)
-                self.submit_for_review(
-                    version_id=version_id, max_attempts=max_attempts - 1
-                )
+                self.submit_for_review(version_id=version_id, max_attempts=max_attempts - 1)
             else:
                 raise  # Re-raise the caught exception
 

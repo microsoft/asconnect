@@ -2,13 +2,13 @@
 
 import hashlib
 import os
-from typing import Dict, Iterator, Optional, TypeVar
+from typing import Iterator, TypeVar
 import urllib.parse
 
 IteratorType = TypeVar("IteratorType")  # pylint: disable=invalid-name
 
 
-def next_or_none(iterator: Iterator[IteratorType]) -> Optional[IteratorType]:
+def next_or_none(iterator: Iterator[IteratorType]) -> IteratorType | None:
     """Get the next value from an iterator, or return None when it is exhausted.
 
     :param iterator: The iterator to get the next value from
@@ -21,7 +21,7 @@ def next_or_none(iterator: Iterator[IteratorType]) -> Optional[IteratorType]:
         return None
 
 
-def update_query_parameters(url: str, query_parameters: Dict[str, str]) -> str:
+def update_query_parameters(url: str, query_parameters: dict[str, str]) -> str:
     """Update the query parameters on a URL.
 
     :param url: The URL to update

@@ -1,7 +1,6 @@
 """App Models for the API"""
 
 import enum
-from typing import Dict, List, Optional
 
 import deserialize
 
@@ -67,7 +66,7 @@ class AppScreenshotSet(Resource):
 
     identifier: str
     attributes: Attributes
-    relationships: Optional[Dict[str, Relationship]]
+    relationships: dict[str, Relationship] | None
     links: Links
 
 
@@ -90,9 +89,9 @@ class AppMediaAssetStateState(enum.Enum):
 class AppMediaAssetState(Reprable):
     """An app media asset state."""
 
-    errors: List[AppMediaStateError]
+    errors: list[AppMediaStateError]
     state: AppMediaAssetStateState
-    warnings: Optional[List[AppMediaStateError]]
+    warnings: list[AppMediaStateError] | None
 
 
 @deserialize.key("template_url", "templateUrl")
@@ -118,7 +117,7 @@ class UploadOperation(Reprable):
     length: int
     method: str
     offset: int
-    request_headers: List[UploadOperationHeader]
+    request_headers: list[UploadOperationHeader]
     url: str
 
 
@@ -141,13 +140,13 @@ class AppScreenshot(Resource):
         asset_token: str
         asset_type: str
         file_name: str
-        file_size: Optional[int]
-        image_asset: Optional[ImageAsset]
-        source_file_checksum: Optional[str]
-        uploaded: Optional[bool]
-        upload_operations: Optional[List[UploadOperation]]
+        file_size: int | None
+        image_asset: ImageAsset | None
+        source_file_checksum: str | None
+        uploaded: bool | None
+        upload_operations: list[UploadOperation] | None
 
     identifier: str
     attributes: Attributes
-    relationships: Optional[Dict[str, Relationship]]
+    relationships: dict[str, Relationship] | None
     links: Links

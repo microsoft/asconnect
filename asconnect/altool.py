@@ -4,7 +4,6 @@ import enum
 import logging
 import subprocess
 import time
-from typing import Optional
 
 
 class Platform(enum.Enum):
@@ -40,7 +39,7 @@ def upload(
     platform: Platform,
     key_id: str,
     issuer_id: str,
-    log: Optional[logging.Logger] = None,
+    log: logging.Logger | None = None,
     attempt: int = 1,
     max_attempts: int = 3,
 ) -> None:

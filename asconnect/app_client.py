@@ -4,7 +4,7 @@
 # Licensed under the MIT license.
 
 import logging
-from typing import Any, Dict, Iterator, List, Optional
+from typing import Any, Iterator
 
 from asconnect.httpclient import HttpClient
 from asconnect.models import App, AppStoreVersion, Platform, ReleaseType
@@ -33,19 +33,19 @@ class AppClient:
 
     def get_all(
         self,
-        url: Optional[str] = None,
+        url: str | None = None,
     ) -> Iterator[App]:
         """Get all apps.
 
-        :param Optional[str] url: The URL to use (will be generated if not supplied)
+        :param url: The URL to use (will be generated if not supplied)
 
         :returns: A list of apps
         """
         self.log.debug("Getting all apps...")
         url = self.http_client.generate_url("apps")
-        yield from self.http_client.get(url=url, data_type=List[App])
+        yield from self.http_client.get(url=url, data_type=list[App])
 
-    def get_from_bundle_id(self, bundle_id: str) -> Optional[App]:
+    def get_from_bundle_id(self, bundle_id: str) -> App | None:
         """Get a particular app.
 
         :param bundle_id: The bundle ID of the app to get
@@ -64,10 +64,10 @@ class AppClient:
         version: str,
         app_id: str,
         platform: Platform = Platform.IOS,
-        copyright_text: Optional[str] = None,
-        uses_idfa: Optional[bool] = None,
+        copyright_text: str | None = None,
+        uses_idfa: bool | None = None,
         release_type: ReleaseType = ReleaseType.MANUAL,
-        earliest_release_date: Optional[str] = None,
+        earliest_release_date: str | None = None,
     ) -> AppStoreVersion:
         """Create a new version on the app store.
 
@@ -87,7 +87,7 @@ class AppClient:
 
         self.log.info(f"Creating version {version} for {app_id}...")
 
-        attributes: Dict[str, Any] = {
+        attributes: dict[str, Any] = {
             "platform": platform.value,
             "versionString": version,
             "releaseType": release_type.value,

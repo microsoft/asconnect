@@ -1,7 +1,5 @@
 """Beta groups models for the API"""
 
-from typing import Dict, Optional
-
 import deserialize
 
 from asconnect.models.common import BaseAttributes, Links, Relationship, Resource
@@ -24,15 +22,15 @@ class BetaGroup(Resource):
 
         is_internal_group: bool
         name: str
-        public_link: Optional[str]
-        public_link_enabled: Optional[bool]
-        public_link_id: Optional[str]
-        public_link_limit: Optional[int]
-        public_link_limit_enabled: Optional[bool]
+        public_link: str | None
+        public_link_enabled: bool | None
+        public_link_id: str | None
+        public_link_limit: int | None
+        public_link_limit_enabled: bool | None
         created_date: str
         feedback_enabled: bool
 
     identifier: str
     attributes: Attributes
-    relationships: Optional[Dict[str, Relationship]]
+    relationships: dict[str, Relationship] | None
     links: Links

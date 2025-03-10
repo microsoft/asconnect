@@ -1,7 +1,6 @@
 """User Models for the API"""
 
 import enum
-from typing import Dict, List, Optional
 
 import deserialize
 
@@ -35,7 +34,7 @@ class UserAttributes(BaseAttributes):
 
     first_name: str
     last_name: str
-    roles: List[UserRole]
+    roles: list[UserRole]
     provisioning_allowed: bool
     all_apps_visible: bool
     username: str
@@ -47,5 +46,5 @@ class User(Resource):
 
     identifier: str
     attributes: UserAttributes
-    relationships: Optional[Dict[str, Relationship]]
+    relationships: dict[str, Relationship] | None
     links: Links

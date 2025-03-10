@@ -5,9 +5,7 @@ description = "A wrapper around the Apple App Store Connect APIs"
 
 license = "MIT"
 
-authors = [
-    "Dale Myers <dalemy@microsoft.com>"
-]
+authors = ["Dale Myers <dalemyers@microsoft.com>"]
 
 readme = 'README.md'
 
@@ -22,15 +20,13 @@ classifiers = [
     'Environment :: MacOS X',
     'Intended Audience :: Developers',
     'Programming Language :: Python :: 3',
-    'Programming Language :: Python :: 3.9',
-    'Programming Language :: Python :: 3.10',
     'Programming Language :: Python :: 3.11',
     'Topic :: Software Development',
-    'Topic :: Utilities'
+    'Topic :: Utilities',
 ]
 
 [tool.poetry.dependencies]
-python = "^3.8"
+python = "^3.11"
 cryptography = ">=40,<43"
 deserialize = "^2.0.1"
 pyjwt = "^2.6.0"
@@ -38,18 +34,16 @@ requests = "^2.28.2"
 tenacity = "^8.2.2"
 
 [tool.poetry.group.dev.dependencies]
-black = "24.3.0"
-mypy = "1.9.0"
-pylint = "3.1.0"
+black = "25.1.0"
+mypy = "1.15.0"
+pylint = "3.3.5"
 pytest = "^8.1.1"
 pytest-cov = "^4.1.0"
 pytest-dependency = "^0.5.1"
 types-requests = "^2.28.11.16"
 
 [[tool.mypy.overrides]]
-module = [
-    "deserialize"
-]
+module = ["deserialize"]
 ignore_missing_imports = true
 
 [build-system]

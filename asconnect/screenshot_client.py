@@ -5,7 +5,7 @@
 
 import logging
 import os
-from typing import Iterator, List
+from typing import Iterator
 
 from asconnect.exceptions import AppStoreConnectError
 from asconnect.httpclient import HttpClient
@@ -49,7 +49,7 @@ class ScreenshotClient:
         url = self.http_client.generate_url(
             f"appStoreVersionLocalizations/{localization_id}/appScreenshotSets"
         )
-        yield from self.http_client.get(url=url, data_type=List[AppScreenshotSet])
+        yield from self.http_client.get(url=url, data_type=list[AppScreenshotSet])
 
     def delete_set(self, *, screenshot_set_id: str, delete_all_screenshots: bool = True) -> None:
         """Delete a screenshot set.
@@ -84,7 +84,7 @@ class ScreenshotClient:
         """
         self.log.debug(f"Getting screenshots {screenshot_set_id}")
         url = self.http_client.generate_url(f"appScreenshotSets/{screenshot_set_id}/appScreenshots")
-        yield from self.http_client.get(url=url, data_type=List[AppScreenshot])
+        yield from self.http_client.get(url=url, data_type=list[AppScreenshot])
 
     def delete_screenshot(self, *, screenshot_id: str) -> None:
         """Delete a screenshot.
@@ -200,7 +200,7 @@ class ScreenshotClient:
         )
 
     def _upload_screenshot_contents(
-        self, *, file_path: str, upload_operations: List[UploadOperation], use_auth_header: bool
+        self, *, file_path: str, upload_operations: list[UploadOperation], use_auth_header: bool
     ) -> None:
         """Upload a screenshots contents
 

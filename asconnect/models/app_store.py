@@ -1,7 +1,6 @@
 """App Models for the API"""
 
 import enum
-from typing import Dict, Optional
 
 import deserialize
 
@@ -78,16 +77,16 @@ class AppStoreVersion(Resource):
         platform: Platform
         app_store_state: AppStoreVersionState
         copyright: str
-        earliest_release_date: Optional[str]
+        earliest_release_date: str | None
         release_type: ReleaseType
-        uses_idfa: Optional[bool]
+        uses_idfa: bool | None
         version_string: str
         created_date: str
         downloadable: bool
 
     identifier: str
     attributes: Attributes
-    relationships: Optional[Dict[str, Relationship]]
+    relationships: dict[str, Relationship] | None
     links: Links
 
 
@@ -104,7 +103,7 @@ class AppStoreVersionPhasedRelease(Resource):
 
         current_day_number: int
         phased_release_state: PhasedReleaseState
-        start_date: Optional[str]
+        start_date: str | None
         total_pause_duration: int
 
     identifier: str
@@ -137,5 +136,5 @@ class AppStoreReviewDetails(Resource):
 
     identifier: str
     attributes: Attributes
-    relationships: Optional[Dict[str, Relationship]]
+    relationships: dict[str, Relationship] | None
     links: Links

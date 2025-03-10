@@ -5,7 +5,7 @@
 
 import datetime
 import logging
-from typing import Any, Dict, Iterator, Optional, Tuple, Type
+from typing import Any, Iterator, Type
 
 import deserialize
 import jwt
@@ -26,7 +26,7 @@ class HttpClient:
     log: logging.Logger
 
     _credentials_valid: bool
-    _cached_token_info: Optional[Tuple[str, datetime.datetime]]
+    _cached_token_info: tuple[str, datetime.datetime] | None
 
     def __init__(
         self,
@@ -174,8 +174,8 @@ class HttpClient:
         self,
         *,
         data_type: Type,
-        endpoint: Optional[str] = None,
-        url: Optional[str] = None,
+        endpoint: str | None = None,
+        url: str | None = None,
         log_response: bool = False,
         attempts: int = 3,
     ) -> Iterator[Any]:
@@ -184,11 +184,11 @@ class HttpClient:
         Either endpoint or url must be specified. url will take precedence if
         both are specified.
 
-        :param Type data_type: The class to deserialize the data of the response to
-        :param Optional[str] endpoint: The endpoint to perform the GET on
-        :param Optional[str] url: The full URL to perform the GET on
+        :param data_type: The class to deserialize the data of the response to
+        :param endpoint: The endpoint to perform the GET on
+        :param url: The full URL to perform the GET on
         :param log_response: A flag indicates whether to log the response
-        :param int attempts: Number of attempts remaining to try this call
+        :param attempts: Number of attempts remaining to try this call
 
         :raises ValueError: If neither url or endpoint are specified
         :raises AppStoreConnectError: If an error with the API occurs
@@ -260,9 +260,9 @@ class HttpClient:
     def patch(
         self,
         *,
-        data_type: Optional[Type] = None,
-        endpoint: Optional[str] = None,
-        url: Optional[str] = None,
+        data_type: Type | None = None,
+        endpoint: str | None = None,
+        url: str | None = None,
         data: Any,
         log_response: bool = False,
     ) -> Any:
@@ -271,10 +271,10 @@ class HttpClient:
         Either endpoint or url must be specified. url will take precedence if
         both are specified.
 
-        :param Optional[Type] data_type: The class to deserialize the data of the response to
-        :param Optional[str] endpoint: The endpoint to perform the GET on
-        :param Optional[str] url: The full URL to perform the GET on
-        :param Any data: Some JSON serializable data to send
+        :param data_type: The class to deserialize the data of the response to
+        :param endpoint: The endpoint to perform the GET on
+        :param url: The full URL to perform the GET on
+        :param data: Some JSON serializable data to send
         :param log_response: A flag indicates whether to log the response
 
         :raises AppStoreConnectError: If we don't get a 200 response back
@@ -316,10 +316,10 @@ class HttpClient:
     def post(
         self,
         *,
-        endpoint: Optional[str] = None,
-        url: Optional[str] = None,
+        endpoint: str | None = None,
+        url: str | None = None,
         data: Any,
-        data_type: Optional[Type] = None,
+        data_type: Type | None = None,
         log_response: bool = False,
     ) -> Any:
         """Perform a POST to the endpoint specified.
@@ -327,10 +327,10 @@ class HttpClient:
         Either endpoint or url must be specified. url will take precedence if
         both are specified.
 
-        :param Optional[str] endpoint: The endpoint to perform the GET on
-        :param Optional[str] url: The full URL to perform the GET on
-        :param Any data: Some JSON serializable data to send
-        :param Optional[Type] data_type: The data type to deserialize the response to
+        :param endpoint: The endpoint to perform the GET on
+        :param url: The full URL to perform the GET on
+        :param data: Some JSON serializable data to send
+        :param data_type: The data type to deserialize the response to
         :param log_response: A flag indicates whether to log the response
 
         :raises ValueError: If neither url or endpoint are specified
@@ -373,8 +373,8 @@ class HttpClient:
     def delete(
         self,
         *,
-        endpoint: Optional[str] = None,
-        url: Optional[str] = None,
+        endpoint: str | None = None,
+        url: str | None = None,
         log_response: bool = False,
     ) -> requests.Response:
         """Perform a DELETE to the endpoint specified.
@@ -382,8 +382,8 @@ class HttpClient:
         Either endpoint or url must be specified. url will take precedence if
         both are specified.
 
-        :param Optional[str] endpoint: The endpoint to perform the GET on
-        :param Optional[str] url: The full URL to perform the GET on
+        :param endpoint: The endpoint to perform the GET on
+        :param url: The full URL to perform the GET on
         :param log_response: A flag indicates whether to log the response
 
         :raises ValueError: If neither url or endpoint are specified
@@ -413,16 +413,16 @@ class HttpClient:
         self,
         *,
         url: str,
-        additional_headers: Dict[str, str],
+        additional_headers: dict[str, str],
         data: bytes,
         use_auth_header: bool = True,
         log_response: bool = False,
     ) -> requests.Response:
         """Perform a PUT to the url specified
 
-        :param str url: The full URL to perform the PUT on
-        :param Dict[str,str] additional_headers: The additional headers to add
-        :param bytes data: The raw data to upload
+        :param url: The full URL to perform the PUT on
+        :param additional_headers: The additional headers to add
+        :param data: The raw data to upload
         :param use_auth_header: A flag indicates whether an auth header will be included in the request
         :param log_response: A flag indicates whether to log the response
 

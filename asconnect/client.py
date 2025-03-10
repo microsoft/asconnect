@@ -4,7 +4,6 @@
 # Licensed under the MIT license.
 
 import logging
-from typing import Optional
 
 
 from asconnect.httpclient import HttpClient
@@ -39,7 +38,7 @@ class Client:
         key_id: str,
         key_contents: str,
         issuer_id: str,
-        log: Optional[logging.Logger] = None,
+        log: logging.Logger | None = None,
     ) -> None:
         """Construct a new client object.
 

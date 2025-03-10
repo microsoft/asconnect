@@ -1,7 +1,5 @@
 """Model types for requests."""
 
-from typing import Dict, Optional
-
 import deserialize
 
 from asconnect.models.common import BaseAttributes, Resource, Links, Relationship
@@ -25,12 +23,12 @@ class BetaAppReviewDetail(Resource):
         contact_first_name: str
         contact_last_name: str
         contact_phone: str
-        demo_account_name: Optional[str]
-        demo_account_password: Optional[str]
+        demo_account_name: str | None
+        demo_account_password: str | None
         demo_account_required: bool
-        notes: Optional[str]
+        notes: str | None
 
     identifier: str
     attributes: Attributes
-    relationships: Optional[Dict[str, Relationship]]
+    relationships: dict[str, Relationship] | None
     links: Links

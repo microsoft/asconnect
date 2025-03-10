@@ -1,7 +1,5 @@
 """Localization models for the API"""
 
-from typing import Dict, Optional
-
 import deserialize
 
 from asconnect.models.common import BaseAttributes, Links, Relationship, Resource
@@ -21,13 +19,13 @@ class BetaAppLocalization(Resource):
         description: str
         feedback_email: str
         locale: str
-        marketing_url: Optional[str]
-        privacy_policy_url: Optional[str]
-        tv_os_privacy_policy: Optional[str]
+        marketing_url: str | None
+        privacy_policy_url: str | None
+        tv_os_privacy_policy: str | None
 
     identifier: str
     attributes: Attributes
-    relationships: Optional[Dict[str, Relationship]]
+    relationships: dict[str, Relationship] | None
     links: Links
 
 
@@ -40,9 +38,9 @@ class BetaBuildLocalization(Resource):
         """Represents beta build localization attributes."""
 
         locale: str
-        whats_new: Optional[str]
+        whats_new: str | None
 
     identifier: str
     attributes: Attributes
-    relationships: Optional[Dict[str, Relationship]]
+    relationships: dict[str, Relationship] | None
     links: Links

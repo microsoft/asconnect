@@ -1,7 +1,5 @@
 """App Models for the API"""
 
-from typing import Dict, Optional
-
 import deserialize
 
 from asconnect.models.common import BaseAttributes, Links, Relationship, Resource
@@ -18,15 +16,15 @@ class AppStoreVersionLocalization(Resource):
     class Attributes(BaseAttributes):
         """Attributes."""
 
-        description: Optional[str]
-        keywords: Optional[str]
+        description: str | None
+        keywords: str | None
         locale: str
-        marketing_url: Optional[str]
-        promotional_text: Optional[str]
-        support_url: Optional[str]
-        whats_new: Optional[str]
+        marketing_url: str | None
+        promotional_text: str | None
+        support_url: str | None
+        whats_new: str | None
 
     identifier: str
     attributes: Attributes
-    relationships: Optional[Dict[str, Relationship]]
+    relationships: dict[str, Relationship] | None
     links: Links

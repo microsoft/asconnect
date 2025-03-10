@@ -1,7 +1,6 @@
 """App Models for the API"""
 
 import enum
-from typing import Dict, Optional
 
 import deserialize
 
@@ -27,8 +26,8 @@ class AppAttributes(BaseAttributes):
     name: str
     primary_locale: str
     sku: str
-    available_in_new_territories: Optional[bool]
-    content_rights_declaration: Optional[ContentRightsDeclaration]
+    available_in_new_territories: bool | None
+    content_rights_declaration: ContentRightsDeclaration | None
     is_or_ever_was_made_for_kids: bool
 
 
@@ -38,7 +37,7 @@ class App(Resource):
 
     identifier: str
     attributes: AppAttributes
-    relationships: Optional[Dict[str, Relationship]]
+    relationships: dict[str, Relationship] | None
     links: Links
 
     @property
@@ -74,7 +73,7 @@ class App(Resource):
         return self.attributes.sku
 
     @property
-    def available_in_new_territories(self) -> Optional[bool]:
+    def available_in_new_territories(self) -> bool | None:
         """Returns whether or not this app is available in new territories
 
         :returns: True if this app is available in new territories, False otherwise
@@ -82,7 +81,7 @@ class App(Resource):
         return self.attributes.available_in_new_territories
 
     @property
-    def content_rights_declaration(self) -> Optional[ContentRightsDeclaration]:
+    def content_rights_declaration(self) -> ContentRightsDeclaration | None:
         """Return any content rights declaration
 
         :returns: Any content rights declaration

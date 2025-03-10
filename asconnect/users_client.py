@@ -4,7 +4,7 @@
 # Licensed under the MIT license.
 
 import logging
-from typing import Iterator, List
+from typing import Iterator
 
 from asconnect.httpclient import HttpClient
 
@@ -47,4 +47,4 @@ class UsersClient:
 
         url = update_query_parameters(url, query_parameters)
 
-        yield from self.http_client.get(url=url, data_type=List[User])
+        yield from self.http_client.get(url=url, data_type=list[User])

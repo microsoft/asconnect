@@ -6,7 +6,7 @@
 import logging
 import os
 import time
-from typing import Iterator, List, Optional
+from typing import Iterator
 
 from asconnect.httpclient import HttpClient
 
@@ -40,19 +40,19 @@ class BuildClient:
     def get_builds(
         self,
         *,
-        url: Optional[str] = None,
-        sort: Optional[BuildsSort] = None,
-        build_number: Optional[str] = None,
-        version: Optional[str] = None,
-        app_id: Optional[str] = None,
+        url: str | None = None,
+        sort: BuildsSort | None = None,
+        build_number: str | None = None,
+        version: str | None = None,
+        app_id: str | None = None,
     ) -> Iterator[Build]:
         """Get all builds.
 
-        :param Optional[str] url: The URL to use (will be generated if not supplied)
-        :param Optional[BuildSort] sort: The sort option to use
-        :param Optional[str] build_number: Filter to just this build number
-        :param Optional[str] version: Filter to just this version
-        :param Optional[str] app_id: Filter to just this app
+        :param url: The URL to use (will be generated if not supplied)
+        :param sort: The sort option to use
+        :param build_number: Filter to just this build number
+        :param version: Filter to just this version
+        :param app_id: Filter to just this app
 
         :returns: A list of builds
         """
@@ -78,9 +78,9 @@ class BuildClient:
 
         url = update_query_parameters(url, query_parameters)
 
-        yield from self.http_client.get(url=url, data_type=List[Build])
+        yield from self.http_client.get(url=url, data_type=list[Build])
 
-    def get_build_from_identifier(self, identifier: str) -> Optional[Build]:
+    def get_build_from_identifier(self, identifier: str) -> Build | None:
         """Get a build from its identifier
 
         :param identifier: The unique identifier for the build (_not_ the build number)
@@ -94,7 +94,7 @@ class BuildClient:
 
         return next_or_none(self.http_client.get(url=url, data_type=Build))
 
-    def get_from_build_number(self, bundle_id: str, build_number: str) -> Optional[Build]:
+    def get_from_build_number(self, bundle_id: str, build_number: str) -> Build | None:
         """Get a build from its build number.
 
         :param bundle_id: The bundle ID of the app
@@ -157,7 +157,7 @@ class BuildClient:
             )
             time.sleep(wait_time)
 
-    def get_beta_detail(self, build: Build) -> Optional[BuildBetaDetail]:
+    def get_beta_detail(self, build: Build) -> BuildBetaDetail | None:
         """Get the build beta details.
 
         :param build: The build to get the beta details for

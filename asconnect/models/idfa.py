@@ -1,7 +1,5 @@
 """App Models for the API"""
 
-from typing import Dict, Optional
-
 import deserialize
 
 from asconnect.models.common import BaseAttributes, Resource, Links, Relationship
@@ -27,5 +25,5 @@ class IdfaDeclaration(Resource):
 
     identifier: str
     attributes: Attributes
-    relationships: Optional[Dict[str, Relationship]]
+    relationships: dict[str, Relationship] | None
     links: Links

@@ -1,7 +1,6 @@
 """Build beta detail models for the API"""
 
 import enum
-from typing import Dict, Optional
 
 import deserialize
 
@@ -53,5 +52,5 @@ class BuildBetaDetail(Resource):
 
     identifier: str
     attributes: Attributes
-    relationships: Optional[Dict[str, Relationship]]
+    relationships: dict[str, Relationship] | None
     links: Links

@@ -8,7 +8,6 @@ import json
 import os
 import re
 import sys
-from typing import Optional, Tuple, Union
 
 import jwt
 
@@ -23,7 +22,7 @@ APP_ID = ""
 IPA_PATH = ""
 
 
-def get_test_data() -> Tuple[str, str, str]:
+def get_test_data() -> tuple[str, str, str]:
     """Get the test data.
 
     :returns: The test data
@@ -832,12 +831,12 @@ def load_value(
     *,
     root_path: str,
     file_name: str,
-    localized_info: Union[
-        asconnect.models.AppInfoLocalization, asconnect.models.AppStoreVersionLocalization
-    ],
-    current_value: Optional[str],
-    version: Optional[str] = None,
-) -> Optional[str]:
+    localized_info: (
+        asconnect.models.AppInfoLocalization | asconnect.models.AppStoreVersionLocalization
+    ),
+    current_value: str | None,
+    version: str | None = None,
+) -> str | None:
     """Load an app value from the metadata files.
 
     This checks for values in the following order:

@@ -1,7 +1,6 @@
 """Localization models for the API"""
 
 import enum
-from typing import Dict, Optional
 
 import deserialize
 
@@ -18,15 +17,15 @@ class AppInfoLocalization(Resource):
     class Attributes(BaseAttributes):
         """Represents app info localization attributes."""
 
-        locale: Optional[str]
-        name: Optional[str]
-        privacy_policy_text: Optional[str]
-        privacy_policy_url: Optional[str]
-        subtitle: Optional[str]
+        locale: str | None
+        name: str | None
+        privacy_policy_text: str | None
+        privacy_policy_url: str | None
+        subtitle: str | None
 
     identifier: str
     attributes: Attributes
-    relationships: Optional[Dict[str, Relationship]]
+    relationships: dict[str, Relationship] | None
     links: Links
 
 
@@ -71,10 +70,10 @@ class AppInfo(Resource):
 
         app_store_age_rating: AppStoreAgeRating
         app_store_state: AppStoreVersionState
-        brazil_age_rating: Optional[BrazilAgeRating]
-        kids_age_band: Optional[KidsAgeBand]
+        brazil_age_rating: BrazilAgeRating | None
+        kids_age_band: KidsAgeBand | None
 
     identifier: str
     attributes: Attributes
-    relationships: Optional[Dict[str, Relationship]]
+    relationships: dict[str, Relationship] | None
     links: Links

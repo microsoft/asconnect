@@ -1,7 +1,5 @@
 """Models for the API"""
 
-from typing import Optional
-
 import deserialize
 
 
@@ -9,10 +7,10 @@ import deserialize
 class Links:
     """Represents item links."""
 
-    self_link: Optional[str]
-    first: Optional[str]
-    next: Optional[str]
-    related: Optional[str]
+    self_link: str | None
+    first: str | None
+    next: str | None
+    related: str | None
 
 
 class Relationship:
