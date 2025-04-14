@@ -117,7 +117,7 @@ class BuildClient:
             if not app:
                 break
 
-            if app.bundle_id == bundle_id:
+            if app.identifier == bundle_id:
                 return build
 
         return None
