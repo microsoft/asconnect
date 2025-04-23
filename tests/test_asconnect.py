@@ -249,7 +249,7 @@ def test_get_build_localization_details() -> None:
         issuer_id=issuer_id,
     )
 
-    build = client.build.get_from_build_number(build_number="", bundle_id=APP_ID)
+    build = client.build.get_from_build_number(build_number="", app_id=APP_ID)
 
     assert build is not None
 
@@ -266,7 +266,7 @@ def test_set_whats_new() -> None:
         issuer_id=issuer_id,
     )
 
-    build = client.build.get_from_build_number(build_number="", bundle_id=APP_ID)
+    build = client.build.get_from_build_number(build_number="", app_id=APP_ID)
 
     assert build is not None
 
@@ -286,7 +286,7 @@ def test_get_build_beta_detail() -> None:
         issuer_id=issuer_id,
     )
 
-    build = client.build.get_from_build_number(build_number="", bundle_id=APP_ID)
+    build = client.build.get_from_build_number(build_number="", app_id=APP_ID)
 
     assert build is not None
 
@@ -332,7 +332,7 @@ def test_set_beta_groups_detail() -> None:
 
     assert app is not None
 
-    build = client.build.get_from_build_number(build_number="", bundle_id=APP_ID)
+    build = client.build.get_from_build_number(build_number="", app_id=APP_ID)
 
     assert build is not None
 
@@ -355,7 +355,7 @@ def test_beta_review_submission() -> None:
         issuer_id=issuer_id,
     )
 
-    build = client.build.get_from_build_number(build_number="", bundle_id=APP_ID)
+    build = client.build.get_from_build_number(build_number="", app_id=APP_ID)
 
     assert build is not None
 

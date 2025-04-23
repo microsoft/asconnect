@@ -94,16 +94,16 @@ class BuildClient:
 
         return next_or_none(self.http_client.get(url=url, data_type=Build))
 
-    def get_from_build_number(self, bundle_id: str, build_number: str) -> Build | None:
+    def get_from_build_number(self, app_id: str, build_number: str) -> Build | None:
         """Get a build from its build number.
 
-        :param bundle_id: The bundle ID of the app
+        :param app_id: The ID of the app
         :param build_number: The build number for the build to get
 
         :returns: The build if found, None otherwise
         """
 
-        self.log.info(f"Getting build from build number {build_number} for bundle {bundle_id}")
+        self.log.info(f"Getting build from build number {build_number} for app {app_id}")
 
         for build in self.get_builds(build_number=build_number):
             self.log.debug(f"Checking build {build}")
@@ -117,17 +117,17 @@ class BuildClient:
             if not app:
                 break
 
-            if app.identifier == bundle_id:
+            if app.identifier == app_id:
                 return build
 
         return None
 
     def wait_for_build_to_process(
-        self, bundle_id: str, build_number: str, wait_time: int = 30
+        self, app_id: str, build_number: str, wait_time: int = 30
     ) -> Build:
         """Wait for a build to finish processing.
 
-        :param bundle_id: The ID of the app
+        :param app_id: The ID of the app
         :param build_number: The build number for the build to wait for
         :param wait_time: The time to wait between checks for processing completion in seconds
 
@@ -137,7 +137,7 @@ class BuildClient:
 
         while True:
             self.log.info("Waiting for build to appear...")
-            build = self.get_from_build_number(bundle_id, build_number)
+            build = self.get_from_build_number(app_id, build_number)
             if build is not None:
                 break
             time.sleep(wait_time)
