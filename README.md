@@ -66,7 +66,7 @@ version = client.app.create_new_version(version="1.2.3", app_id=app.identifier)
 client.version.set_build(version_id=version.identifier, build_id=build.identifier)
 
 # Submit for review
-client.version.submit_for_review(version_id=version.identifier)
+client.version.submit_for_review(app_id=app.identifier, platform=Platform.IOS)
 ```
 
 It's that easy. Most of the time at least. If you don't have previous version to inherit information from you'll need to do things like set screenshots, reviewer info, etc. All of which is possible through this library.
