@@ -439,30 +439,29 @@ class VersionClient:
     def submit_for_review(
         self,
         *,
-        version_id: str,
+        app_id: str,
+        platform: Platform,
         max_attempts: int = 3,
     ) -> None:
         """Submit the version for review
 
-        :param version_id: The ID of the version to submit for review
+        :param app_id: The ID of the app to submit for review
+        :param platform: The platform to submit for review
         :param max_attempts: The number of attempts allowed
 
         :raises AppStoreConnectError: If runs into unretriable error or exceeds retry count
         """
 
         try:
-            self.log.info(f"Submitting version for review {version_id}")
+            self.log.info(f"Submitting app for review {app_id}")
 
             self.http_client.post(
-                endpoint="appStoreVersionSubmissions",
+                endpoint="reviewSubmissions",
                 data={
                     "data": {
-                        "type": "appStoreVersionSubmissions",
-                        "relationships": {
-                            "appStoreVersion": {
-                                "data": {"type": "appStoreVersions", "id": version_id}
-                            }
-                        },
+                        "type": "reviewSubmissions",
+                        "attributes": {"platform": platform.value},
+                        "relationships": {"app": {"data": {"type": "apps", "id": app_id}}},
                     }
                 },
                 log_response=True,
@@ -478,7 +477,9 @@ class VersionClient:
                     f"Submit failed due to server-side intermittent issue. Will sleep for 1 minute and try again, left attempt: {max_attempts - 1}."
                 )
                 time.sleep(60)
-                self.submit_for_review(version_id=version_id, max_attempts=max_attempts - 1)
+                self.submit_for_review(
+                    app_id=app_id, platform=platform, max_attempts=max_attempts - 1
+                )
             else:
                 raise  # Re-raise the caught exception
 
