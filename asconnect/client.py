@@ -11,6 +11,7 @@ from asconnect.app_client import AppClient
 from asconnect.app_info_client import AppInfoClient
 from asconnect.beta_review_client import BetaReviewClient
 from asconnect.build_client import BuildClient
+from asconnect.reviews_client import ReviewsClient
 from asconnect.screenshot_client import ScreenshotClient
 from asconnect.users_client import UsersClient
 from asconnect.version_client import VersionClient
@@ -28,6 +29,7 @@ class Client:
     app_info: AppInfoClient
     beta_review: BetaReviewClient
     build: BuildClient
+    reviews: ReviewsClient
     screenshots: ScreenshotClient
     users: UsersClient
     version: VersionClient
@@ -61,6 +63,7 @@ class Client:
         self.app_info = AppInfoClient(http_client=self.http_client, log=self.log)
         self.beta_review = BetaReviewClient(http_client=self.http_client, log=self.log)
         self.build = BuildClient(http_client=self.http_client, log=self.log)
+        self.reviews = ReviewsClient(http_client=self.http_client, log=self.log)
         self.screenshots = ScreenshotClient(http_client=self.http_client, log=self.log)
         self.users = UsersClient(http_client=self.http_client, log=self.log)
         self.version = VersionClient(http_client=self.http_client, log=self.log)
