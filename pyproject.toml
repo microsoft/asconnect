@@ -41,6 +41,7 @@ pytest = "^8.1.1"
 pytest-cov = "^4.1.0"
 pytest-dependency = "^0.5.1"
 types-requests = "^2.28.11.16"
+pylint-per-file-ignores = "^1.4.0"
 
 [[tool.mypy.overrides]]
 module = ["deserialize"]
@@ -49,3 +50,57 @@ ignore_missing_imports = true
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
+
+[tool.pylint.'MASTER']
+jobs = 1 # Needs to be 1 for the per_file_ignores plugin to work
+load-plugins = [
+    "pylint.extensions.docparams",
+    "pylint.extensions.overlapping_exceptions",
+    "pylint.extensions.redefined_variable_type",
+    "pylint.extensions.mccabe",
+    "pylint_per_file_ignores",
+]
+per-file-ignores = ["tests/*: missing-param-doc"]
+
+[tool.pylint.'MESSAGES CONTROL']
+disable = [
+    "C0413", # wrong-import-position
+    "C1801", # len-as-condition
+    "R0801", # duplicate-code
+    "W0511", # fixme
+    "W0703", # broad-except
+    "W1201", # logging-not-lazy
+    "W1202", # logging-format-interpolation
+    "W1203", # logging-fstring-interpolation
+    "W3101", # missing-timeout
+]
+
+per-file-ignores = ["tests/*:missing-param-doc"]
+
+[tool.pylint.REPORTS]
+output-format = "parseable"
+
+[tool.pylint.BASIC]
+good-names = ["f", "i", "j", "k", "ex", "log", "_", "exposed", "unit_test", "T"]
+include-naming-hint = true
+method-rgx = "[a-z_][a-z0-9_]{2,50}$"
+function-rgx = "[a-z_][a-z0-9_]{2,50}$"
+max-attributes = 15
+
+[tool.pylint.DESIGN]
+min-public-methods = 0
+
+[tool.pylint.FORMAT]
+max-line-length = 200
+max-statements = 75
+max-args = 8
+expected-line-ending-format = "LF"
+
+[tool.pylint.'pylint.extensions.docparams']
+accept-no-param-doc = false
+accept-no-raise-doc = false
+accept-no-return-doc = false
+
+[tool.pylint.'pylint.extensions.mccabe']
+max-complexity = 12
