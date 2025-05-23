@@ -14,11 +14,7 @@ class ContentRightsDeclaration(enum.Enum):
     USES_THIRD_PARTY_CONTENT = "USES_THIRD_PARTY_CONTENT"
 
 
-@deserialize.key("bundle_id", "bundleId")
-@deserialize.key("primary_locale", "primaryLocale")
-@deserialize.key("available_in_new_territories", "availableInNewTerritories")
-@deserialize.key("content_rights_declaration", "contentRightsDeclaration")
-@deserialize.key("is_or_ever_was_made_for_kids", "isOrEverWasMadeForKids")
+@deserialize.auto_snake()
 class AppAttributes(BaseAttributes):
     """Represents app attributes."""
 
@@ -29,6 +25,11 @@ class AppAttributes(BaseAttributes):
     available_in_new_territories: bool | None
     content_rights_declaration: ContentRightsDeclaration | None
     is_or_ever_was_made_for_kids: bool
+    subscription_status_url: str | None
+    subscription_status_url_version: str | None
+    subscription_status_url_for_sandbox: str | None
+    subscription_status_url_version_for_sandbox: str | None
+    streamlined_purchasing_enabled: bool | None
 
 
 @deserialize.key("identifier", "id")

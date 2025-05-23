@@ -12,3 +12,12 @@ class BuildsSort(enum.Enum):
     UPLOADED_DATE_REVERSED = "-uploadedDate"
     VERSION = "version"
     VERSION_REVERSED = "-version"
+
+
+class CustomerReviewSort(enum.Enum):
+    """Orders that customer reviews can be sorted."""
+
+    RATING_ASC = "rating"
+    RATING_DESC = "-rating"
+    CREATED_DATE_ASC = "createdDate"
+    CREATED_DATE_DESC = "-createdDate"
