@@ -5,7 +5,7 @@ import enum
 import deserialize
 
 from asconnect.models.common import BaseAttributes, Links, Relationship, Resource
-from asconnect.models.app_store import AppStoreVersionState
+from asconnect.models.app_store import AppStoreVersionState, Platform
 
 
 @deserialize.key("identifier", "id")
@@ -72,6 +72,21 @@ class AppInfo(Resource):
         app_store_state: AppStoreVersionState
         brazil_age_rating: BrazilAgeRating | None
         kids_age_band: KidsAgeBand | None
+
+    identifier: str
+    attributes: Attributes
+    relationships: dict[str, Relationship] | None
+    links: Links
+
+
+@deserialize.key("identifier", "id")
+class AppCategory(Resource):
+    """Represents an app category."""
+
+    class Attributes(BaseAttributes):
+        """Represents app category attributes."""
+
+        platforms: list[Platform]
 
     identifier: str
     attributes: Attributes

@@ -7,7 +7,7 @@ import logging
 from typing import Iterator
 
 from asconnect.httpclient import HttpClient
-from asconnect.models import AppInfoLocalization, AppInfo, AppStoreVersionLocalization
+from asconnect.models import AppInfoLocalization, AppInfo, AppStoreVersionLocalization, AppCategory
 from asconnect.utilities import update_query_parameters
 
 
@@ -46,6 +46,40 @@ class AppInfoClient:
         url = self.http_client.generate_url(f"apps/{app_id}/appInfos")
 
         return list(self.http_client.get(url=url, data_type=list[AppInfo]))
+
+    def _get_category(self, *, app_info_id: str, category_id: str) -> AppCategory:
+        """Get a specific app category.
+
+        :param category_id: The ID of the category to get
+        :param app_info_id: The app info ID to get the category for
+
+        :returns: The AppCategory object
+        """
+
+        self.log.debug(f"Getting category {category_id}")
+        url = self.http_client.generate_url(f"appInfos/{app_info_id}/{category_id}Category")
+
+        return next(self.http_client.get(url=url, data_type=AppCategory))
+
+    def get_primary_category(self, *, app_info_id: str) -> AppCategory:
+        """Get the primary category for an app info.
+
+        :param app_info_id: The app info ID to get the primary category for
+
+        :returns: The primary category ID
+        """
+
+        return self._get_category(app_info_id=app_info_id, category_id="primary")
+
+    def get_secondary_category(self, *, app_info_id: str) -> AppCategory:
+        """Get the primary category for an app info.
+
+        :param app_info_id: The app info ID to get the primary category for
+
+        :returns: The primary category ID
+        """
+
+        return self._get_category(app_info_id=app_info_id, category_id="secondary")
 
     def get_localizations(
         self,
@@ -126,6 +160,23 @@ class AppInfoClient:
             data=data,
             data_type=AppInfoLocalization,
         )
+
+    def get_localization_versions(
+        self, *, app_store_version_id: str
+    ) -> Iterator[AppStoreVersionLocalization]:
+        """Get the app store version localizations for an app.
+
+        :param app_store_version_id: The ID of the app store version to get the localized info for
+
+        :returns: An iterator to AppStoreVersionLocalization
+        """
+
+        self.log.debug(f"Getting localizations for {app_store_version_id}")
+        url = self.http_client.generate_url(
+            f"appStoreVersions/{app_store_version_id}/appStoreVersionLocalizations"
+        )
+
+        yield from self.http_client.get(url=url, data_type=list[AppStoreVersionLocalization])
 
     def set_localization_version_properties(
         self,
