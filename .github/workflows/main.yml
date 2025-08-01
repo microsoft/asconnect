@@ -1,0 +1,76 @@
+# .github/workflows/release.yml
+
+name: Release Python Package
+
+on:
+  # This allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+    inputs:
+      version_type:
+        description: 'Version type (major, minor, or patch)'
+        required: true
+        type: choice
+        options:
+        - patch
+        - minor
+        - major
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    # Grant permissions to write to the repository for committing the version bump and creating a tag.
+    permissions:
+      contents: write
+    steps:
+    - name: Check out repository
+      uses: actions/checkout@v4
+      with:
+        # This token is needed to push changes back to the repo
+        token: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.12'
+
+    - name: Install Poetry
+      run: pipx install poetry
+
+    - name: Configure Poetry
+      run: poetry config virtualenvs.in-project true
+
+    - name: Install dependencies
+      run: poetry install --no-root
+
+    - name: Configure Git
+      run: |
+        git config user.name "github-actions[bot]"
+        git config user.email "github-actions[bot]@users.noreply.github.com"
+
+    - name: Bump version number
+      id: version_bump
+      run: |
+        poetry version ${{ github.event.inputs.version_type }}
+        
+        # Extract the new version number to use in later steps
+        NEW_VERSION=$(poetry version --short)
+        echo "new_version=$NEW_VERSION" >> "$GITHUB_OUTPUT"
+        
+    - name: Commit and push version change
+      run: |
+        git add pyproject.toml
+        git commit -m "Bump version to v${{ steps.version_bump.outputs.new_version }}"
+        git push
+
+    - name: Tag the commit
+      run: |
+        git tag "v${{ steps.version_bump.outputs.new_version }}"
+        git push origin "v${{ steps.version_bump.outputs.new_version }}"
+
+    - name: Build and publish to PyPI
+      env:
+        # The secret token for PyPI is stored in GitHub Secrets
+        POETRY_PYPI_TOKEN_PYPI: ${{ secrets.PYPI_API_TOKEN }}
+      run: |
+        poetry build
+        poetry publish
