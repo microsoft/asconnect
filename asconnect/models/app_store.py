@@ -132,7 +132,7 @@ class AppStoreReviewDetails(Resource):
         demo_account_name: str
         demo_account_password: str
         demo_account_required: bool
-        notes: str
+        notes: str | None
 
     identifier: str
     attributes: Attributes
