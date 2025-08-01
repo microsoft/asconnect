@@ -407,6 +407,36 @@ class VersionClient:
             data_type=IdfaDeclaration,
         )
 
+    def set_attribute(
+        self,
+        *,
+        version_id: str,
+        attribute_name: str,
+        attribute_value: bool | str | int | float | None,
+    ) -> AppStoreVersion:
+        """Set an attribute on the version.
+
+        :param version_id: The ID of the version to set the build on
+        :param attribute_name: The name of the attribute to set
+        :param attribute_value: The value of the attribute to set
+
+        :returns: The patched version
+        """
+
+        self.log.info(f"Setting {attribute_name} to {attribute_value} for version {version_id}")
+
+        return self.http_client.patch(
+            endpoint=f"appStoreVersions/{version_id}",
+            data={
+                "data": {
+                    "type": "appStoreVersions",
+                    "id": version_id,
+                    "attributes": {attribute_name: attribute_value},
+                }
+            },
+            data_type=AppStoreVersion,
+        )
+
     def set_uses_idfa(
         self,
         *,
@@ -424,16 +454,28 @@ class VersionClient:
 
         self.log.info(f"Setting uses IDFA for version {version_id}")
 
-        return self.http_client.patch(
-            endpoint=f"appStoreVersions/{version_id}",
-            data={
-                "data": {
-                    "type": "appStoreVersions",
-                    "id": version_id,
-                    "attributes": {"usesIdfa": True},
-                }
-            },
-            data_type=AppStoreVersion,
+        return self.set_attribute(
+            version_id=version_id, attribute_name="usesIdfa", attribute_value=True
+        )
+
+    def set_version_string(
+        self,
+        *,
+        version_id: str,
+        version_string: str,
+    ) -> AppStoreVersion:
+        """Set the version string.
+
+        :param version_id: The ID of the version to set the build on
+        :param version_string: The version string to set
+
+        :returns: The patched app
+        """
+
+        self.log.info(f"Setting version to {version_string} for version {version_id}")
+
+        return self.set_attribute(
+            version_id=version_id, attribute_name="versionString", attribute_value=version_string
         )
 
     def submit_for_review(
