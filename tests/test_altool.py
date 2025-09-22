@@ -21,8 +21,8 @@ def test_altool_wrong_parameter() -> None:
         "--verbose"
     ], capture_output=True, text=True, timeout=30)
     
-    print(f"Return code: {result.returncode}")
-    print(f"Error: {result.stderr}")
+    print(f"returncode: {result.returncode}")
+    print(f"stderr: {result.stderr}")
 
     # Check that the error is about parameters, not just file not found
     error_text = result.stderr.lower()
@@ -63,8 +63,8 @@ def test_altool_correct_parameters() -> None:
         "--verbose"
     ], capture_output=True, text=True, timeout=30)
     
-    print(f"Return code: {result.returncode}")
-    print(f"Error: {result.stderr}")
+    print(f"returncode: {result.returncode}")
+    print(f"stderr: {result.stderr}")
 
     # Check that the error is about file not found, not about wrong parameters
     error_text = result.stderr.lower()
