@@ -4,6 +4,7 @@
 """Tests for the package."""
 
 import os
+import subprocess
 import sys
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.abspath(__file__), "..", "..")))
@@ -57,3 +58,39 @@ def test_get_build_beta_detail(client: asconnect.Client, app_id: str) -> None:
     build_detail = client.build.get_beta_detail(build)
 
     assert build_detail is not None
+
+
+def test_altool_parameter_validation() -> None:
+    """Test that altool validates the correct parameter names."""
+
+    key_id = os.getenv('ASC_KEY_ID', 'test_key_id')
+    issuer_id = os.getenv('ASC_ISSUER_ID', 'test_issuer_id')
+
+    # Test with WRONG parameter names (should fail)
+    result = subprocess.run([
+        "xcrun", "altool",
+        "--upload-app",
+        "-f", "/nonexistent/file.ipa",
+        "-t", "ios",
+        "--apiKeywrong", key_id,  # Wrong parameter name
+        "--apiIssuer", issuer_id,  # Wrong parameter name
+        "--verbose"
+    ], capture_output=True, text=True, timeout=30)
+
+    # Check that the error is about parameters, not just file not found
+    error_text = result.stderr.lower()
+
+    # If we get a file error instead of parameter error, the wrong parameters were accepted
+    if "failed to load authkey file" in error_text and "expected api key argument is missing" not in error_text:
+        raise AssertionError(f"Wrong parameters were accepted! Should have been rejected. Error: {result.stderr}")
+
+    # If we get parameter error, that's good - wrong parameters were rejected
+    if "expected api key argument is missing" in error_text:
+        return  # Test passes
+
+    # If altool succeeded (returncode 0), that's bad - wrong parameters were accepted
+    if result.returncode == 0:
+        raise AssertionError("Wrong parameters should cause altool to fail")
+
+    # Any other case is unexpected
+    raise AssertionError(f"Unexpected error with wrong parameters: {result.stderr}")
