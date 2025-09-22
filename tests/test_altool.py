@@ -10,7 +10,6 @@ def test_altool_wrong_parameter() -> None:
     key_id = os.getenv('ASC_KEY_ID', 'test_key_id')
     issuer_id = os.getenv('ASC_ISSUER_ID', 'test_issuer_id')
 
-    # Test with WRONG parameter names (should fail)
     result = subprocess.run([
         "xcrun", "altool",
         "--upload-app",
@@ -34,13 +33,11 @@ def test_altool_wrong_parameter() -> None:
     # If we get parameter error, that's good - wrong parameters were rejected
     if "expected api key argument is missing" in error_text:
         print("✓ Test passed: Wrong parameters were correctly rejected")
-        return  # Test passes
+        return 
 
-    # If altool succeeded (returncode 0), that's bad - wrong parameters were accepted
     if result.returncode == 0:
         assert False, "Wrong parameters should cause altool to fail"
 
-    # Any other case is unexpected
     assert False, f"Unexpected error with wrong parameters: {result.stderr}"
 
 
