@@ -1,10 +1,12 @@
+"""Tests for altool parameter validation."""
+
 import os
 import subprocess
 
 
 def test_altool_wrong_parameter() -> None:
     """Test that altool validates the correct parameter names."""
-    
+
     print("Starting test...")
 
     key_id = os.getenv('ASC_KEY_ID', 'test_key_id')
@@ -18,8 +20,8 @@ def test_altool_wrong_parameter() -> None:
         "--apiKeyWrong", key_id,  # Wrong parameter name
         "--apiIssuer", issuer_id,  # Wrong parameter name
         "--verbose"
-    ], capture_output=True, text=True, timeout=30)
-    
+    ], capture_output=True, text=True, timeout=30, check=False)
+
     print(f"returncode: {result.returncode}")
     print(f"stderr: {result.stderr}")
 
@@ -33,7 +35,7 @@ def test_altool_wrong_parameter() -> None:
     # If we get parameter error, that's good - wrong parameters were rejected
     if "expected api key argument is missing" in error_text:
         print("✓ Test passed: Wrong parameters were correctly rejected")
-        return 
+        return
 
     if result.returncode == 0:
         assert False, "Wrong parameters should cause altool to fail"
@@ -43,7 +45,7 @@ def test_altool_wrong_parameter() -> None:
 
 def test_altool_correct_parameters() -> None:
     """Test that altool accepts the correct parameter names."""
-    
+
     print("Starting correct parameters test...")
 
     key_id = os.getenv('ASC_KEY_ID', 'test_key_id')
@@ -58,8 +60,8 @@ def test_altool_correct_parameters() -> None:
         "--api-key", key_id,  # Correct parameter name
         "--api-issuer", issuer_id,  # Correct parameter name
         "--verbose"
-    ], capture_output=True, text=True, timeout=30)
-    
+    ], capture_output=True, text=True, timeout=30, check=False)
+
     print(f"returncode: {result.returncode}")
     print(f"stderr: {result.stderr}")
 
