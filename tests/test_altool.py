@@ -86,5 +86,4 @@ def test_altool_correct_parameters() -> None:
 
 if __name__ == "__main__":
     test_altool_wrong_parameter()
-    print("\n" + "="*50 + "\n")
     test_altool_correct_parameters()
