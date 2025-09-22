@@ -69,9 +69,9 @@ def upload(
         ipa_path,
         "-t",
         platform.value,
-        "-apiKey",
+        "-api-key",
         key_id,
-        "--apiIssuer",
+        "--api-issuer",
         issuer_id,
         "--verbose",
     ]
