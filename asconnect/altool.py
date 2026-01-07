@@ -48,7 +48,7 @@ def upload(
     :param ipa_path: The path to the ipa to upload
     :param platform: The platform the app is for
     :param key_id: The ID for the key used for auth
-    :param issuer_id: The ID of the issuer of the auth key
+    :param issuer_id: The issuer ID for team keys
     :param log: Any base logger to be used (one will be created if not supplied)
     :param attempt: The attempt this is
     :param max_attempts: The number of attempts allowed
