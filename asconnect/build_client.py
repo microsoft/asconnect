@@ -175,6 +175,8 @@ class BuildClient:
         :param ipa_path: The path to the IPA
         :param platform: The platform the app is for
         :param max_attempts: The number of attempts allowed
+
+        :raises ValueError: If using an individual API key (altool only supports team keys)
         """
 
         self.log.info(f"Uploading IPA {ipa_path} for platform {platform}")
