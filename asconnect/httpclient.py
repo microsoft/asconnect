@@ -22,7 +22,7 @@ class HttpClient:
 
     _key_id: str
     _key_contents: str
-    _issuer_id: str
+    _issuer_id: str | None
     log: logging.Logger
 
     _credentials_valid: bool
@@ -33,14 +33,14 @@ class HttpClient:
         *,
         key_id: str,
         key_contents: str,
-        issuer_id: str,
+        issuer_id: str | None = None,
         log: logging.Logger,
     ) -> None:
         """Construct a new client object.
 
         :param key_id: The ID of your key (can be found in app store connect)
         :param key_contents: The contents of your key
-        :param issuer_id: The contents of your key (can be found in app store connect
+        :param issuer_id: The issuer ID for team keys. Omit for individual keys (can be found in app store connect)
         :param log: Any base logger to be used (one will be created if not supplied)
         """
 
@@ -87,7 +87,7 @@ class HttpClient:
         self._credentials_valid = False
 
     @property
-    def issuer_id(self) -> str:
+    def issuer_id(self) -> str | None:
         """Get issuer ID.
 
         :returns: Issuer ID
@@ -95,7 +95,7 @@ class HttpClient:
         return self._issuer_id
 
     @issuer_id.setter
-    def issuer_id(self, value: str) -> None:
+    def issuer_id(self, value: str | None) -> None:
         """Set issuer ID.
 
         :param value: The new value to set to
@@ -123,15 +123,27 @@ class HttpClient:
             self._cached_token_info = None
 
         # Tokens more than 20 minutes in the future are invalid, so our new one is less than that
-        expiration = datetime.datetime.now() + datetime.timedelta(minutes=NEW_TOKEN_AGE_IN_MINUTES)
+        now = datetime.datetime.now()
+        expiration = now + datetime.timedelta(minutes=NEW_TOKEN_AGE_IN_MINUTES)
 
         # Details at https://developer.apple.com/documentation/appstoreconnectapi/generating_tokens_for_api_requests
+        # Team keys use "iss" claim with issuer_id
+        # Individual keys use "sub" claim with subject (always "user")
+        payload = {
+            "iat": int(now.timestamp()),
+            "exp": int(expiration.timestamp()),
+            "aud": "appstoreconnect-v1",
+        }
+
+        if self._issuer_id is not None:
+            # Team key
+            payload["iss"] = self._issuer_id
+        else:
+            # Individual key - sub is always "user" per Apple's documentation
+            payload["sub"] = "user"
+
         token = jwt.encode(
-            {
-                "iss": self.issuer_id,
-                "exp": int(expiration.timestamp()),
-                "aud": "appstoreconnect-v1",
-            },
+            payload,
             self.key_contents,
             algorithm="ES256",
             headers={"kid": self.key_id, "typ": "JWT"},

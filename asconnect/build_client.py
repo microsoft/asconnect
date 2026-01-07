@@ -182,6 +182,14 @@ class BuildClient:
         key_path = write_key(self.http_client.key_id, self.http_client.key_contents)
 
         try:
+            # altool only supports team keys with issuer_id, not individual keys
+            # See: https://developer.apple.com/forums/thread/756929
+            if self.http_client.issuer_id is None:
+                raise ValueError(
+                    "altool does not support individual API keys. "
+                    "Please use a team API key with an issuer_id for uploading builds."
+                )
+
             upload(
                 ipa_path=ipa_path,
                 platform=platform,

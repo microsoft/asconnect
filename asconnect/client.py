@@ -39,14 +39,14 @@ class Client:
         *,
         key_id: str,
         key_contents: str,
-        issuer_id: str,
+        issuer_id: str | None = None,
         log: logging.Logger | None = None,
     ) -> None:
         """Construct a new client object.
 
         :param key_id: The ID of your key (can be found in app store connect)
         :param key_contents: The contents of your key
-        :param issuer_id: The contents of your key (can be found in app store connect
+        :param issuer_id: The issuer ID for team keys. Omit for individual keys (can be found in app store connect)
         :param log: Any base logger to be used (one will be created if not supplied)
         """
 
