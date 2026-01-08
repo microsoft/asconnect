@@ -192,6 +192,9 @@ class BuildClient:
                     "Please use a team API key with an issuer_id for uploading builds."
                 )
 
+            # At this point, we know issuer_id is not None because we checked is_individual_key
+            assert self.http_client.issuer_id is not None
+
             upload(
                 ipa_path=ipa_path,
                 platform=platform,
