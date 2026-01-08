@@ -103,6 +103,14 @@ class HttpClient:
         self._issuer_id = value
         self._credentials_valid = False
 
+    @property
+    def is_individual_key(self) -> bool:
+        """Check if this is an individual API key.
+
+        :returns: True if using an individual key, False if using a team key
+        """
+        return self._issuer_id is None
+
     def generate_token(self) -> str:
         """Generate a new JWT token.
 
@@ -135,12 +143,12 @@ class HttpClient:
             "aud": "appstoreconnect-v1",
         }
 
-        if self._issuer_id is not None:
-            # Team key
-            payload["iss"] = self._issuer_id
-        else:
+        if self.is_individual_key:
             # Individual key - sub is always "user" per Apple's documentation
             payload["sub"] = "user"
+        else:
+            # Team key
+            payload["iss"] = self._issuer_id
 
         token = jwt.encode(
             payload,
