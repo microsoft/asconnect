@@ -16,11 +16,11 @@ from asconnect.sorting import BuildsSort
 from asconnect.utilities import update_query_parameters, next_or_none, write_key
 
 
-def _is_team_issuer_id(issuer_id: str | None) -> TypeGuard[str]:
-    """Type guard to check if issuer_id is a valid team key (not None).
+def _has_issuer_id(issuer_id: str | None) -> TypeGuard[str]:
+    """Type guard to check if issuer_id is present (indicating a team key).
 
     :param issuer_id: The issuer_id to check
-    :returns: True if issuer_id is not None (indicating a team key)
+    :returns: True if issuer_id is not None (team key), False if None (individual key)
     """
     return issuer_id is not None
 
@@ -196,7 +196,7 @@ class BuildClient:
             # altool only supports team keys with issuer_id, not individual keys
             # See: https://developer.apple.com/forums/thread/756929
             issuer_id = self.http_client.issuer_id
-            if not _is_team_issuer_id(issuer_id):
+            if not _has_issuer_id(issuer_id):
                 raise ValueError(
                     "altool does not support individual API keys. "
                     "Please use a team API key with an issuer_id for uploading builds."
