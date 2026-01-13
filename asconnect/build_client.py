@@ -6,7 +6,7 @@
 import logging
 import os
 import time
-from typing import Iterator
+from typing import Iterator, TypeGuard
 
 from asconnect.httpclient import HttpClient
 
@@ -14,6 +14,15 @@ from asconnect.altool import upload, Platform
 from asconnect.models import App, Build, BuildBetaDetail
 from asconnect.sorting import BuildsSort
 from asconnect.utilities import update_query_parameters, next_or_none, write_key
+
+
+def _has_issuer_id(issuer_id: str | None) -> TypeGuard[str]:
+    """Type guard to check if issuer_id is present (indicating a team key).
+
+    :param issuer_id: The issuer_id to check
+    :returns: True if issuer_id is not None (team key), False if None (individual key)
+    """
+    return issuer_id is not None
 
 
 class BuildClient:
@@ -175,6 +184,8 @@ class BuildClient:
         :param ipa_path: The path to the IPA
         :param platform: The platform the app is for
         :param max_attempts: The number of attempts allowed
+
+        :raises ValueError: If using an individual API key (altool only supports team keys)
         """
 
         self.log.info(f"Uploading IPA {ipa_path} for platform {platform}")
@@ -182,11 +193,20 @@ class BuildClient:
         key_path = write_key(self.http_client.key_id, self.http_client.key_contents)
 
         try:
+            # altool only supports team keys with issuer_id, not individual keys
+            # See: https://developer.apple.com/forums/thread/756929
+            issuer_id = self.http_client.issuer_id
+            if not _has_issuer_id(issuer_id):
+                raise ValueError(
+                    "altool does not support individual API keys. "
+                    "Please use a team API key with an issuer_id for uploading builds."
+                )
+
             upload(
                 ipa_path=ipa_path,
                 platform=platform,
                 key_id=self.http_client.key_id,
-                issuer_id=self.http_client.issuer_id,
+                issuer_id=issuer_id,
                 log=self.log,
                 max_attempts=max_attempts,
             )

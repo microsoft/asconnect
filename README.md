@@ -19,13 +19,26 @@ The package is available on PyPI, so you can run `pip install asconnect` to get 
 
 ### Creating a client
 
-To begin, you need to [generate a key](https://developer.apple.com/documentation/appstoreconnectapi/creating_api_keys_for_app_store_connect_api), then get it's ID, the contents of the key itself, and the issuer ID.
+To begin, you need to [generate a key](https://developer.apple.com/documentation/appstoreconnectapi/creating_api_keys_for_app_store_connect_api). There are two types of API keys:
 
-Once you have those, you can create a new client by running:
+1. **Team Keys**: These require a key ID, key contents, and issuer ID
+2. **Individual Keys**: These require a key ID and key contents (used for individual access to specific apps)
+
+For **team keys**, create a client by running:
 
 ```python
 client = asconnect.Client(key_id="...", key_contents="...", issuer_id="...")
 ```
+
+For **individual keys**, create a client by running:
+
+```python
+client = asconnect.Client(key_id="...", key_contents="...")
+```
+
+Note: Individual keys automatically use the correct JWT payload format as specified by Apple (with `sub: "user"`).
+
+**Important Limitation**: Build uploads via `altool` only work with team keys. Individual API keys are not supported by `altool`. For build uploads, you must use a team API key with an issuer ID.
 
 ### Getting your App
 
