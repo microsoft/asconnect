@@ -1,17 +1,20 @@
 """Wrapper for altool."""
 
-import enum
 import logging
 import subprocess
 import time
 
+from asconnect.models import Platform
 
-class Platform(enum.Enum):
-    """The platforms that altool supports."""
-
-    IOS = "ios"
-    MACOS = "osx"
-    TVOS = "appletvos"
+# altool's `-t` flag uses platform identifiers that differ from the App Store
+# Connect REST API values on `models.Platform`. Keep the API-facing enum as the
+# single source of truth and translate here at the subprocess boundary.
+_ALTOOL_PLATFORM_VALUES: dict[Platform, str] = {
+    Platform.IOS: "ios",
+    Platform.MACOS: "osx",
+    Platform.TVOS: "appletvos",
+    Platform.VISIONOS: "visionos",
+}
 
 
 def _check_should_restart(line: str) -> bool:
@@ -61,6 +64,11 @@ def upload(
     else:
         log = logging.getLogger(__name__)
 
+    try:
+        altool_platform = _ALTOOL_PLATFORM_VALUES[platform]
+    except KeyError as ex:
+        raise ValueError(f"altool does not support platform {platform}") from ex
+
     command = [
         "xcrun",
         "altool",
@@ -68,7 +76,7 @@ def upload(
         "-f",
         ipa_path,
         "-t",
-        platform.value,
+        altool_platform,
         "--api-key",
         key_id,
         "--api-issuer",

@@ -8,5 +8,4 @@
 from asconnect.client import Client
 from asconnect.models import App
 from asconnect.models import Build
-
-from asconnect.altool import Platform
+from asconnect.models import Platform
