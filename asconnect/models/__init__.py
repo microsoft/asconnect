@@ -10,6 +10,7 @@ from asconnect.models.beta_groups import *
 from asconnect.models.builds import *
 from asconnect.models.idfa import *
 from asconnect.models.localization import *
+from asconnect.models.review_submissions import *
 from asconnect.models.reviews import *
 from asconnect.models.screenshots import *
 from asconnect.models.users import *
