@@ -56,6 +56,7 @@ def upload(
     :param attempt: The attempt this is
     :param max_attempts: The number of attempts allowed
 
+    :raises ValueError: If altool does not support the given platform
     :raises CalledProcessError: If something goes wrong during upload
     """
 

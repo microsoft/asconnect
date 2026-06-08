@@ -31,6 +31,9 @@ def test_platform_values_match_app_store_connect_api() -> None:
 
 def test_altool_maps_platform_to_cli_values() -> None:
     """altool's `-t` flag uses different identifiers than the REST API."""
+    # This test deliberately asserts the contents of the module-private lookup
+    # table that maps the API platform enum to altool's CLI flag values.
+    # pylint: disable=protected-access
     assert altool._ALTOOL_PLATFORM_VALUES[ModelsPlatform.IOS] == "ios"
     assert altool._ALTOOL_PLATFORM_VALUES[ModelsPlatform.MACOS] == "osx"
     assert altool._ALTOOL_PLATFORM_VALUES[ModelsPlatform.TVOS] == "appletvos"
