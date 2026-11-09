@@ -10,6 +10,7 @@ from asconnect.models.common import BaseAttributes, Resource, Links, Relationshi
 class ScreenshotDisplayType(enum.Enum):
     """Screenshot display type."""
 
+    APP_IPHONE_DUO = "APP_IPHONE_DUO"
     APP_IPHONE_67 = "APP_IPHONE_67"
     APP_IPHONE_65 = "APP_IPHONE_65"
     APP_IPHONE_61 = "APP_IPHONE_61"
